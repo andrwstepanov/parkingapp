@@ -189,32 +189,101 @@ class Renderer {
         this.ctx.rotate(car.angle);
 
         const scale = this.scale;
+        const bodyColor = car.colliding ? '#c0392b' : '#2980b9';
 
-        // Draw windshield (front)
-        const windshieldX = car.wheelbase * 0.5 * scale;
-        const windshieldWidth = car.width * 0.6 * scale;
-        const windshieldHeight = car.wheelbase * 0.4 * scale;
+        // Draw wheel arches (before other details)
+        this.ctx.fillStyle = car.colliding ? '#a93226' : '#1f5f8b';
 
-        this.ctx.fillStyle = 'rgba(135, 206, 250, 0.5)';
-        this.ctx.fillRect(windshieldX - windshieldHeight / 2, -windshieldWidth / 2,
-                         windshieldHeight, windshieldWidth);
+        // Front wheel arches
+        const frontArchX = car.wheelbase * scale;
+        const archWidth = CAR_SPECS.wheelDiameter * 1.1 * scale;
+        const archHeight = car.width * 0.45 * scale;
 
-        // Draw rear window
-        const rearWindowX = -car.rearOverhang * 0.5 * scale;
-        const rearWindowWidth = car.width * 0.5 * scale;
-        const rearWindowHeight = car.rearOverhang * 0.3 * scale;
+        this.ctx.fillRect(frontArchX - archWidth / 2, -archHeight / 2, archWidth, archHeight);
 
-        this.ctx.fillStyle = 'rgba(135, 206, 250, 0.4)';
-        this.ctx.fillRect(rearWindowX - rearWindowHeight / 2, -rearWindowWidth / 2,
-                         rearWindowHeight, rearWindowWidth);
+        // Rear wheel arches
+        this.ctx.fillRect(-archWidth / 2, -archHeight / 2, archWidth, archHeight);
+
+        // Draw windshield (C-HR has a swept-back design)
+        const windshieldStartX = car.wheelbase * 0.4 * scale;
+        const windshieldEndX = car.wheelbase * 0.7 * scale;
+        const windshieldWidth = car.width * 0.65 * scale;
+
+        this.ctx.fillStyle = 'rgba(150, 190, 220, 0.6)';
+        this.ctx.beginPath();
+        this.ctx.moveTo(windshieldStartX, -windshieldWidth / 2);
+        this.ctx.lineTo(windshieldEndX, -windshieldWidth / 2);
+        this.ctx.lineTo(windshieldEndX, windshieldWidth / 2);
+        this.ctx.lineTo(windshieldStartX, windshieldWidth / 2);
+        this.ctx.closePath();
+        this.ctx.fill();
+
+        // Draw front windshield slope line (A-pillar)
+        this.ctx.strokeStyle = car.colliding ? '#7f1d1d' : '#1a4d6d';
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.moveTo(windshieldStartX, -windshieldWidth / 2);
+        this.ctx.lineTo(windshieldStartX, windshieldWidth / 2);
+        this.ctx.stroke();
+
+        // Draw rear window (C-HR has distinctive rear glass)
+        const rearWindowX = car.wheelbase * 0.1 * scale;
+        const rearWindowWidth = car.width * 0.55 * scale;
+        const rearWindowLength = car.wheelbase * 0.25 * scale;
+
+        this.ctx.fillStyle = 'rgba(130, 170, 200, 0.5)';
+        this.ctx.fillRect(rearWindowX - rearWindowLength / 2, -rearWindowWidth / 2,
+                         rearWindowLength, rearWindowWidth);
+
+        // Draw roof line
+        this.ctx.strokeStyle = car.colliding ? '#8b1e1e' : '#1e5a7a';
+        this.ctx.lineWidth = 2.5;
+        this.ctx.beginPath();
+        this.ctx.moveTo(windshieldStartX, -car.width * 0.35 * scale);
+        this.ctx.lineTo(rearWindowX, -car.width * 0.35 * scale);
+        this.ctx.moveTo(windshieldStartX, car.width * 0.35 * scale);
+        this.ctx.lineTo(rearWindowX, car.width * 0.35 * scale);
+        this.ctx.stroke();
 
         // Draw hood line
-        const hoodX = (car.wheelbase + car.frontOverhang * 0.5) * scale;
+        const hoodX = (car.wheelbase + car.frontOverhang * 0.6) * scale;
         this.ctx.strokeStyle = car.colliding ? '#c0392b' : '#2c3e50';
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
         this.ctx.moveTo(hoodX, -car.width * 0.4 * scale);
         this.ctx.lineTo(hoodX, car.width * 0.4 * scale);
+        this.ctx.stroke();
+
+        // Draw headlights
+        const headlightX = (car.wheelbase + car.frontOverhang * 0.85) * scale;
+        const headlightY = car.width * 0.35 * scale;
+        const headlightSize = 0.15 * scale;
+
+        this.ctx.fillStyle = '#f0f0f0';
+        this.ctx.fillRect(headlightX - headlightSize / 2, -headlightY - headlightSize / 2,
+                         headlightSize, headlightSize);
+        this.ctx.fillRect(headlightX - headlightSize / 2, headlightY - headlightSize / 2,
+                         headlightSize, headlightSize);
+
+        // Draw taillights
+        const taillightX = -(car.rearOverhang * 0.8) * scale;
+        const taillightY = car.width * 0.35 * scale;
+        const taillightSize = 0.12 * scale;
+
+        this.ctx.fillStyle = '#ff3333';
+        this.ctx.fillRect(taillightX - taillightSize / 2, -taillightY - taillightSize / 2,
+                         taillightSize, taillightSize);
+        this.ctx.fillRect(taillightX - taillightSize / 2, taillightY - taillightSize / 2,
+                         taillightSize, taillightSize);
+
+        // Draw C-HR character line (body crease)
+        this.ctx.strokeStyle = car.colliding ? '#a93226' : '#236fa5';
+        this.ctx.lineWidth = 1.5;
+        this.ctx.beginPath();
+        this.ctx.moveTo((car.wheelbase + car.frontOverhang * 0.5) * scale, -car.width * 0.45 * scale);
+        this.ctx.lineTo(-car.rearOverhang * 0.3 * scale, -car.width * 0.48 * scale);
+        this.ctx.moveTo((car.wheelbase + car.frontOverhang * 0.5) * scale, car.width * 0.45 * scale);
+        this.ctx.lineTo(-car.rearOverhang * 0.3 * scale, car.width * 0.48 * scale);
         this.ctx.stroke();
 
         this.ctx.restore();
@@ -223,37 +292,79 @@ class Renderer {
     drawReferencePoints(car) {
         const refs = car.getReferencePoints();
 
-        // Draw left mirror
+        // Draw left mirror (more realistic shape)
         const leftMirror = this.worldToScreen(refs.leftMirror.x, refs.leftMirror.y);
-        this.ctx.fillStyle = '#34495e';
-        this.ctx.strokeStyle = '#2c3e50';
-        this.ctx.lineWidth = 2;
+
+        // Mirror housing
+        this.ctx.fillStyle = '#2c3e50';
         this.ctx.beginPath();
-        this.ctx.arc(leftMirror.x, leftMirror.y, 6, 0, 2 * Math.PI);
+        this.ctx.arc(leftMirror.x, leftMirror.y, 8, 0, 2 * Math.PI);
         this.ctx.fill();
-        this.ctx.stroke();
+
+        // Mirror glass
+        this.ctx.fillStyle = '#87CEEB';
+        this.ctx.beginPath();
+        this.ctx.arc(leftMirror.x, leftMirror.y, 5, 0, 2 * Math.PI);
+        this.ctx.fill();
+
+        // Mirror glass reflection
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        this.ctx.beginPath();
+        this.ctx.arc(leftMirror.x - 1, leftMirror.y - 1, 2, 0, 2 * Math.PI);
+        this.ctx.fill();
 
         // Draw right mirror
         const rightMirror = this.worldToScreen(refs.rightMirror.x, refs.rightMirror.y);
-        this.ctx.fillStyle = '#34495e';
-        this.ctx.strokeStyle = '#2c3e50';
+
+        // Mirror housing
+        this.ctx.fillStyle = '#2c3e50';
         this.ctx.beginPath();
-        this.ctx.arc(rightMirror.x, rightMirror.y, 6, 0, 2 * Math.PI);
+        this.ctx.arc(rightMirror.x, rightMirror.y, 8, 0, 2 * Math.PI);
         this.ctx.fill();
+
+        // Mirror glass
+        this.ctx.fillStyle = '#87CEEB';
+        this.ctx.beginPath();
+        this.ctx.arc(rightMirror.x, rightMirror.y, 5, 0, 2 * Math.PI);
+        this.ctx.fill();
+
+        // Mirror glass reflection
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        this.ctx.beginPath();
+        this.ctx.arc(rightMirror.x - 1, rightMirror.y - 1, 2, 0, 2 * Math.PI);
+        this.ctx.fill();
+
+        // Draw driver seat indicator (more prominent on LEFT side)
+        const driver = this.worldToScreen(refs.driverSeat.x, refs.driverSeat.y);
+
+        // Driver seat circle
+        this.ctx.fillStyle = '#ff6b35';
+        this.ctx.beginPath();
+        this.ctx.arc(driver.x, driver.y, 7, 0, 2 * Math.PI);
+        this.ctx.fill();
+
+        // Highlight
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        this.ctx.beginPath();
+        this.ctx.arc(driver.x - 1, driver.y - 1, 3, 0, 2 * Math.PI);
+        this.ctx.fill();
+
+        // Border
+        this.ctx.strokeStyle = '#c44820';
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.arc(driver.x, driver.y, 7, 0, 2 * Math.PI);
         this.ctx.stroke();
 
-        // Draw driver seat indicator
-        const driver = this.worldToScreen(refs.driverSeat.x, refs.driverSeat.y);
-        this.ctx.fillStyle = '#e67e22';
-        this.ctx.beginPath();
-        this.ctx.arc(driver.x, driver.y, 5, 0, 2 * Math.PI);
-        this.ctx.fill();
+        // Draw label with background
+        this.ctx.fillStyle = 'rgba(255, 107, 53, 0.9)';
+        this.ctx.fillRect(driver.x - 25, driver.y - 20, 50, 14);
 
-        // Draw label
-        this.ctx.fillStyle = '#e67e22';
+        this.ctx.fillStyle = 'white';
         this.ctx.font = 'bold 10px Arial';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('DRIVER', driver.x, driver.y - 12);
+        this.ctx.textBaseline = 'middle';
+        this.ctx.fillText('DRIVER', driver.x, driver.y - 13);
     }
 
     drawWheels(car) {
@@ -264,8 +375,9 @@ class Renderer {
         this.ctx.rotate(car.angle);
 
         const scale = this.scale;
-        const wheelWidth = 0.25 * scale;
-        const wheelHeight = 0.15 * scale;
+        // Use actual wheel dimensions: diameter (length along car) and width (perpendicular)
+        const wheelDiameter = CAR_SPECS.wheelDiameter * scale; // 0.69m - 17" wheel + tire
+        const wheelWidth = CAR_SPECS.wheelWidth * scale;       // 0.22m - 215mm tire width
         const trackHalf = CAR_SPECS.trackWidth / 2 * scale;
 
         // Front wheels (with steering)
@@ -276,27 +388,50 @@ class Renderer {
         this.ctx.save();
         this.ctx.translate(0, -trackHalf);
         this.ctx.rotate(car.steeringAngle);
-        this.ctx.fillStyle = '#2c3e50';
-        this.ctx.fillRect(-wheelWidth / 2, -wheelHeight / 2, wheelWidth, wheelHeight);
+
+        // Wheel tire (black)
+        this.ctx.fillStyle = '#1a1a1a';
+        this.ctx.fillRect(-wheelDiameter / 2, -wheelWidth / 2, wheelDiameter, wheelWidth);
+
+        // Wheel rim (dark gray)
+        this.ctx.fillStyle = '#4a4a4a';
+        this.ctx.fillRect(-wheelDiameter / 2 + 3, -wheelWidth / 2 + 2, wheelDiameter - 6, wheelWidth - 4);
+
         this.ctx.restore();
 
         // Front right wheel
         this.ctx.save();
         this.ctx.translate(0, trackHalf);
         this.ctx.rotate(car.steeringAngle);
-        this.ctx.fillStyle = '#2c3e50';
-        this.ctx.fillRect(-wheelWidth / 2, -wheelHeight / 2, wheelWidth, wheelHeight);
+
+        // Wheel tire (black)
+        this.ctx.fillStyle = '#1a1a1a';
+        this.ctx.fillRect(-wheelDiameter / 2, -wheelWidth / 2, wheelDiameter, wheelWidth);
+
+        // Wheel rim (dark gray)
+        this.ctx.fillStyle = '#4a4a4a';
+        this.ctx.fillRect(-wheelDiameter / 2 + 3, -wheelWidth / 2 + 2, wheelDiameter - 6, wheelWidth - 4);
+
         this.ctx.restore();
 
         this.ctx.restore();
 
         // Rear wheels (no steering)
         // Rear left wheel
-        this.ctx.fillStyle = '#2c3e50';
-        this.ctx.fillRect(-wheelWidth / 2, -trackHalf - wheelHeight / 2, wheelWidth, wheelHeight);
+        this.ctx.fillStyle = '#1a1a1a';
+        this.ctx.fillRect(-wheelDiameter / 2, -trackHalf - wheelWidth / 2, wheelDiameter, wheelWidth);
+
+        // Rear left rim
+        this.ctx.fillStyle = '#4a4a4a';
+        this.ctx.fillRect(-wheelDiameter / 2 + 3, -trackHalf - wheelWidth / 2 + 2, wheelDiameter - 6, wheelWidth - 4);
 
         // Rear right wheel
-        this.ctx.fillRect(-wheelWidth / 2, trackHalf - wheelHeight / 2, wheelWidth, wheelHeight);
+        this.ctx.fillStyle = '#1a1a1a';
+        this.ctx.fillRect(-wheelDiameter / 2, trackHalf - wheelWidth / 2, wheelDiameter, wheelWidth);
+
+        // Rear right rim
+        this.ctx.fillStyle = '#4a4a4a';
+        this.ctx.fillRect(-wheelDiameter / 2 + 3, trackHalf - wheelWidth / 2 + 2, wheelDiameter - 6, wheelWidth - 4);
 
         this.ctx.restore();
     }

@@ -7,6 +7,10 @@ const CAR_SPECS = {
     frontOverhang: 0.88,    // Distance from front axle to front bumper
     rearOverhang: 0.87,     // Distance from rear axle to rear bumper
     trackWidth: 1.52,       // Distance between left and right wheels
+
+    // Wheel specifications (17" wheels with 215/60R17 tires)
+    wheelDiameter: 0.69,    // Total wheel + tire diameter
+    wheelWidth: 0.22,       // Tire width (215mm)
 };
 
 // Calculate maximum steering angle from turning radius
@@ -82,10 +86,11 @@ class Car {
         const sin = Math.sin(this.angle);
 
         // Positions relative to rear axle
+        // Toyota C-HR is left-hand drive in most markets
         const mirrorX = this.wheelbase * 0.3; // Mirrors at 30% of wheelbase
         const mirrorY = this.width / 2 + 0.15; // Slightly outside car width
-        const driverX = this.wheelbase * 0.25; // Driver seat position
-        const driverY = this.width / 2 - 0.3; // Right side (assuming right-hand drive for parking reference)
+        const driverX = this.wheelbase * 0.3; // Driver seat at ~30% of wheelbase (A-pillar area)
+        const driverY = -(this.width / 2 - 0.35); // LEFT side for left-hand drive, inset 0.35m from edge
 
         return {
             leftMirror: {
