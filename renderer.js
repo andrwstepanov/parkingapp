@@ -552,7 +552,7 @@ class Renderer {
     }
 
     // Draw scenario
-    drawScenario(scenario, car) {
+    drawScenario(scenario, car, wheelTraces) {
         this.clear();
         this.drawGrid(scenario);
 
@@ -569,11 +569,43 @@ class Renderer {
         // Draw walls
         scenario.walls.forEach(wall => this.drawWall(wall));
 
+        // Draw wheel traces (before car so they appear underneath)
+        if (wheelTraces) {
+            this.drawWheelTraces(wheelTraces);
+        }
+
         // Draw car
         this.drawCar(car);
 
         // Draw steering indicator
         this.drawSteeringIndicator(car);
+    }
+
+    // Draw wheel trajectory traces
+    drawWheelTraces(traces) {
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+        this.ctx.lineWidth = 2;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
+
+        // Draw traces for each wheel
+        const wheels = ['frontLeft', 'frontRight', 'rearLeft', 'rearRight'];
+
+        wheels.forEach(wheel => {
+            const trace = traces[wheel];
+            if (trace.length < 2) return;
+
+            this.ctx.beginPath();
+            const firstPoint = this.worldToScreen(trace[0].x, trace[0].y);
+            this.ctx.moveTo(firstPoint.x, firstPoint.y);
+
+            for (let i = 1; i < trace.length; i++) {
+                const point = this.worldToScreen(trace[i].x, trace[i].y);
+                this.ctx.lineTo(point.x, point.y);
+            }
+
+            this.ctx.stroke();
+        });
     }
 
     drawSteeringIndicator(car) {

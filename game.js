@@ -28,6 +28,17 @@ class Game {
         this.isCompleted = false;
         this.lastTime = performance.now();
 
+        // Wheel traces for trajectory visualization
+        this.wheelTraces = {
+            frontLeft: [],
+            frontRight: [],
+            rearLeft: [],
+            rearRight: []
+        };
+        this.traceInterval = 0.05; // Record trace every 0.05 seconds
+        this.lastTraceTime = 0;
+        this.maxTracePoints = 500; // Limit trace length to prevent memory issues
+
         // Setup event listeners
         this.setupEventListeners();
 
@@ -99,6 +110,15 @@ class Game {
         this.car.reset(start.x, start.y, start.angle);
         this.isCompleted = false;
         this.hideCollisionWarning();
+
+        // Clear wheel traces
+        this.wheelTraces = {
+            frontLeft: [],
+            frontRight: [],
+            rearLeft: [],
+            rearRight: []
+        };
+        this.lastTraceTime = 0;
     }
 
     updateCamera() {
@@ -280,6 +300,27 @@ class Game {
         // Update car physics
         this.car.update(dt);
 
+        // Record wheel traces at intervals
+        this.lastTraceTime += dt;
+        if (this.lastTraceTime >= this.traceInterval && Math.abs(this.car.speed) > 0.01) {
+            this.lastTraceTime = 0;
+            const positions = this.car.getWheelPositions();
+
+            // Add new trace points
+            this.wheelTraces.frontLeft.push({ x: positions.frontLeft.x, y: positions.frontLeft.y });
+            this.wheelTraces.frontRight.push({ x: positions.frontRight.x, y: positions.frontRight.y });
+            this.wheelTraces.rearLeft.push({ x: positions.rearLeft.x, y: positions.rearLeft.y });
+            this.wheelTraces.rearRight.push({ x: positions.rearRight.x, y: positions.rearRight.y });
+
+            // Limit trace length
+            if (this.wheelTraces.frontLeft.length > this.maxTracePoints) {
+                this.wheelTraces.frontLeft.shift();
+                this.wheelTraces.frontRight.shift();
+                this.wheelTraces.rearLeft.shift();
+                this.wheelTraces.rearRight.shift();
+            }
+        }
+
         // Check collisions
         this.checkCollisions();
 
@@ -291,7 +332,7 @@ class Game {
     }
 
     render() {
-        this.renderer.drawScenario(this.scenario, this.car);
+        this.renderer.drawScenario(this.scenario, this.car, this.wheelTraces);
     }
 
     gameLoop() {

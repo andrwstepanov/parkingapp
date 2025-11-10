@@ -119,6 +119,41 @@ class Car {
         };
     }
 
+    // Get all four wheel positions for trace tracking
+    getWheelPositions() {
+        const cos = Math.cos(this.angle);
+        const sin = Math.sin(this.angle);
+        const trackHalf = CAR_SPECS.trackWidth / 2;
+
+        // Front wheels (at wheelbase distance from rear axle)
+        const frontX = this.wheelbase;
+        const frontLeft = {
+            x: this.x + frontX * cos - (-trackHalf) * sin,
+            y: this.y + frontX * sin + (-trackHalf) * cos
+        };
+        const frontRight = {
+            x: this.x + frontX * cos - trackHalf * sin,
+            y: this.y + frontX * sin + trackHalf * cos
+        };
+
+        // Rear wheels (at rear axle - position 0)
+        const rearLeft = {
+            x: this.x + 0 * cos - (-trackHalf) * sin,
+            y: this.y + 0 * sin + (-trackHalf) * cos
+        };
+        const rearRight = {
+            x: this.x + 0 * cos - trackHalf * sin,
+            y: this.y + 0 * sin + trackHalf * cos
+        };
+
+        return {
+            frontLeft,
+            frontRight,
+            rearLeft,
+            rearRight
+        };
+    }
+
     // Update steering based on input
     updateSteering(dt) {
         const targetAngle = this.steeringInput * this.maxSteeringAngle;
