@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Parking Training - Toyota CHR 2021</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Car Parking Training Simulator</h1>
+            <p>Toyota C-HR 2021 HEV - Practice precise parking maneuvers</p>
+        </header>
+
+        <div class="main-content">
+            <div class="game-area">
+                <canvas id="gameCanvas"></canvas>
+                <div id="collision-warning" class="warning hidden">COLLISION!</div>
+            </div>
+
+            <div class="controls-panel">
+                <div class="scenario-selector">
+                    <h2>Select Scenario</h2>
+                    <button class="scenario-btn active" data-scenario="1">
+                        <span class="scenario-number">1</span>
+                        <span class="scenario-name">Street to Underground</span>
+                        <span class="scenario-desc">90° left turn, 2.5m street to 2.4m entrance</span>
+                    </button>
+                    <button class="scenario-btn" data-scenario="2">
+                        <span class="scenario-number">2</span>
+                        <span class="scenario-name">Hall to Parking Box</span>
+                        <span class="scenario-desc">Enter box 4m from entrance, 2.14m gate</span>
+                    </button>
+                    <button class="scenario-btn" data-scenario="3">
+                        <span class="scenario-number">3</span>
+                        <span class="scenario-name">Exit Parking Box</span>
+                        <span class="scenario-desc">Exit box and navigate to entrance</span>
+                    </button>
+                </div>
+
+                <div class="controls-info">
+                    <h3>Controls</h3>
+                    <div class="control-item">
+                        <span class="key">↑</span>
+                        <span class="action">Forward</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">↓</span>
+                        <span class="action">Reverse</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">← →</span>
+                        <span class="action">Steer</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">Space</span>
+                        <span class="action">Brake</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">R</span>
+                        <span class="action">Reset</span>
+                    </div>
+                </div>
+
+                <div class="car-info">
+                    <h3>Vehicle Status</h3>
+                    <div class="info-row">
+                        <span class="label">Speed:</span>
+                        <span class="value" id="speed-value">0.0 km/h</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Gear:</span>
+                        <span class="value" id="gear-value">N</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Steering:</span>
+                        <span class="value" id="steering-value">0°</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Position:</span>
+                        <span class="value" id="position-value">X: 0.0m Y: 0.0m</span>
+                    </div>
+                </div>
+
+                <button id="reset-btn" class="reset-btn">Reset Position</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="car.js"></script>
+    <script src="scenarios.js"></script>
+    <script src="renderer.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
