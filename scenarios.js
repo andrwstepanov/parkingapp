@@ -3,25 +3,25 @@
 const SCENARIOS = {
     1: {
         name: "Street to Underground Entrance",
-        description: "Navigate from a 3m wide street through a 90° left turn into a 2.5m wide underground entrance",
-        startPosition: { x: 12, y: 8, angle: 0 }, // Start at beginning of street, facing right (left to right)
+        description: "Navigate from a 3.5m wide street through a 90° right turn into a 2.5m wide underground entrance",
+        startPosition: { x: 18, y: 8, angle: Math.PI }, // Start at beginning of street, facing left (right to left)
         walls: [
-            // Street boundaries (horizontal street, 3m wide, car drives left to right)
-            { x1: 5, y1: 6.5, x2: 8.75, y2: 6.5 },   // Top wall of street (before entrance)
-            { x1: 11.25, y1: 6.5, x2: 25, y2: 6.5 }, // Top wall of street (after entrance)
-            { x1: 5, y1: 9.5, x2: 8.75, y2: 9.5 },   // Bottom wall of street (before entrance)
-            { x1: 11.25, y1: 9.5, x2: 25, y2: 9.5 }, // Bottom wall of street (after entrance)
+            // Street boundaries (horizontal street, 3.5m wide, car drives right to left)
+            { x1: 5, y1: 6.25, x2: 8.75, y2: 6.25 },   // Top wall of street (before entrance)
+            { x1: 11.25, y1: 6.25, x2: 25, y2: 6.25 }, // Top wall of street (after entrance)
+            { x1: 5, y1: 9.75, x2: 8.75, y2: 9.75 },   // Bottom wall of street (before entrance)
+            { x1: 11.25, y1: 9.75, x2: 25, y2: 9.75 }, // Bottom wall of street (after entrance)
 
             // Underground entrance (vertical entrance, 2.5m wide, opens into street)
-            { x1: 8.75, y1: 3, x2: 8.75, y2: 6.5 },   // Left wall of entrance
-            { x1: 11.25, y1: 3, x2: 11.25, y2: 6.5 }, // Right wall of entrance
-            { x1: 8.75, y1: 9.5, x2: 8.75, y2: 12 },  // Left wall extension (if needed)
-            { x1: 11.25, y1: 9.5, x2: 11.25, y2: 12 }, // Right wall extension (if needed)
+            { x1: 8.75, y1: 3, x2: 8.75, y2: 6.25 },   // Left wall of entrance
+            { x1: 11.25, y1: 3, x2: 11.25, y2: 6.25 }, // Right wall of entrance
+            { x1: 8.75, y1: 9.75, x2: 8.75, y2: 12 },  // Left wall extension (if needed)
+            { x1: 11.25, y1: 9.75, x2: 11.25, y2: 12 }, // Right wall extension (if needed)
 
             // End walls
             { x1: 8.75, y1: 3, x2: 11.25, y2: 3 },  // Entrance end
-            { x1: 25, y1: 6.5, x2: 25, y2: 9.5 },   // Street end (right side)
-            { x1: 5, y1: 6.5, x2: 5, y2: 9.5 },     // Street start (left side)
+            { x1: 25, y1: 6.25, x2: 25, y2: 9.75 },   // Street end (right side)
+            { x1: 5, y1: 6.25, x2: 5, y2: 9.75 },     // Street start (left side)
         ],
         target: {
             x: 10,
@@ -131,6 +131,131 @@ const SCENARIOS = {
         },
         cameraScale: 35,
         cameraOffset: { x: 10, y: 2 }
+    },
+
+    4: {
+        name: "Parallel Parking",
+        description: "Parallel park between two cars on a 6m wide street with a 6m parking space",
+        startPosition: { x: 20, y: 10, angle: Math.PI }, // Start on street, facing left
+        walls: [
+            // Street boundaries (6m wide street)
+            { x1: 5, y1: 7, x2: 25, y2: 7 },   // Top curb
+            { x1: 5, y1: 13, x2: 25, y2: 13 }, // Bottom curb
+            { x1: 5, y1: 7, x2: 5, y2: 13 },   // Left end
+            { x1: 25, y1: 7, x2: 25, y2: 13 }, // Right end
+
+            // Front parked car (4.5m long, positioned at x=8 to x=12.5)
+            { x1: 8, y1: 7, x2: 8, y2: 8.8 },         // Front left corner
+            { x1: 8, y1: 7, x2: 12.5, y2: 7 },        // Front side (curb)
+            { x1: 12.5, y1: 7, x2: 12.5, y2: 8.8 },   // Front right corner
+            { x1: 8, y1: 8.8, x2: 12.5, y2: 8.8 },    // Front car rear
+
+            // Rear parked car (4.5m long, positioned at x=18.5 to x=23)
+            { x1: 18.5, y1: 7, x2: 18.5, y2: 8.8 },   // Rear left corner
+            { x1: 18.5, y1: 7, x2: 23, y2: 7 },       // Rear side (curb)
+            { x1: 23, y1: 7, x2: 23, y2: 8.8 },       // Rear right corner
+            { x1: 18.5, y1: 8.8, x2: 23, y2: 8.8 },   // Rear car rear
+        ],
+        target: {
+            x: 15.5,  // Center of 6m space
+            y: 7.9,   // Close to curb
+            width: 5, // Lenient width tolerance
+            height: 1.5, // Depth tolerance
+            angle: Math.PI // Facing left, parallel to street
+        },
+        cameraScale: 30,
+        cameraOffset: { x: 15, y: 10 }
+    },
+
+    5: {
+        name: "Perpendicular Parking",
+        description: "Park straight into a perpendicular parking space between two cars",
+        startPosition: { x: 15, y: 15, angle: -Math.PI / 2 }, // Start in driving lane, facing space
+        walls: [
+            // Parking lot driving lane boundaries
+            { x1: 5, y1: 12, x2: 25, y2: 12 },  // Top of driving lane
+            { x1: 5, y1: 17, x2: 25, y2: 17 },  // Bottom of driving lane
+            { x1: 5, y1: 12, x2: 5, y2: 17 },   // Left end
+            { x1: 25, y1: 12, x2: 25, y2: 17 }, // Right end
+
+            // Back wall of parking spaces
+            { x1: 5, y1: 7, x2: 11.8, y2: 7 },    // Left section
+            { x1: 13.2, y1: 7, x2: 16.8, y2: 7 }, // Middle section (gap for target space)
+            { x1: 18.2, y1: 7, x2: 25, y2: 7 },   // Right section
+
+            // Left parked car (2.4m wide space, x=9.4 to x=11.8)
+            { x1: 9.4, y1: 7, x2: 9.4, y2: 11.39 },   // Left side
+            { x1: 11.8, y1: 7, x2: 11.8, y2: 11.39 }, // Right side
+            { x1: 9.4, y1: 11.39, x2: 11.8, y2: 11.39 }, // Front of car
+
+            // Right parked car (2.4m wide space, x=18.2 to x=20.6)
+            { x1: 18.2, y1: 7, x2: 18.2, y2: 11.39 }, // Left side
+            { x1: 20.6, y1: 7, x2: 20.6, y2: 11.39 }, // Right side
+            { x1: 18.2, y1: 11.39, x2: 20.6, y2: 11.39 }, // Front of car
+
+            // Parking space dividers (painted lines - thin obstacles)
+            { x1: 11.8, y1: 7, x2: 11.8, y2: 12 },    // Left divider
+            { x1: 13.2, y1: 7, x2: 13.2, y2: 12 },    // Left of target space
+            { x1: 16.8, y1: 7, x2: 16.8, y2: 12 },    // Right of target space
+            { x1: 18.2, y1: 7, x2: 18.2, y2: 12 },    // Right divider
+        ],
+        target: {
+            x: 15,   // Center of 3.6m space (13.2 to 16.8)
+            y: 9,    // Middle depth
+            width: 3.0,  // Width tolerance
+            height: 3.5, // Depth tolerance
+            angle: -Math.PI / 2 // Facing into space (down)
+        },
+        cameraScale: 32,
+        cameraOffset: { x: 15, y: 12 }
+    },
+
+    6: {
+        name: "Angle Parking (60°)",
+        description: "Park at a 60° angle into an angled parking space - easier than perpendicular",
+        startPosition: { x: 20, y: 15, angle: Math.PI }, // Start in driving lane, facing left
+        walls: [
+            // Driving lane boundaries
+            { x1: 5, y1: 12, x2: 25, y2: 12 },  // Top of driving lane
+            { x1: 5, y1: 17, x2: 25, y2: 17 },  // Bottom of driving lane
+            { x1: 5, y1: 12, x2: 5, y2: 17 },   // Left end
+            { x1: 25, y1: 12, x2: 25, y2: 17 }, // Right end
+
+            // Angled parking spaces back wall sections
+            { x1: 5, y1: 7.5, x2: 9.5, y2: 7.5 },     // Far left
+            { x1: 11.3, y1: 7.5, x2: 13.5, y2: 7.5 }, // Left of target
+            { x1: 16.5, y1: 7.5, x2: 18.7, y2: 7.5 }, // Right of target
+            { x1: 20.5, y1: 7.5, x2: 25, y2: 7.5 },   // Far right
+
+            // Left angled car (60° angle)
+            // Space from x=9.5, angled at 60° from horizontal
+            { x1: 9.5, y1: 7.5, x2: 11.3, y2: 7.5 },   // Back edge
+            { x1: 9.5, y1: 7.5, x2: 7.7, y2: 11.6 },   // Left side (angled)
+            { x1: 11.3, y1: 7.5, x2: 9.5, y2: 11.6 },  // Right side (angled)
+            { x1: 7.7, y1: 11.6, x2: 9.5, y2: 11.6 },  // Front edge
+
+            // Right angled car (60° angle)
+            // Space from x=18.7, angled at 60° from horizontal
+            { x1: 18.7, y1: 7.5, x2: 20.5, y2: 7.5 },  // Back edge
+            { x1: 18.7, y1: 7.5, x2: 16.9, y2: 11.6 }, // Left side (angled)
+            { x1: 20.5, y1: 7.5, x2: 18.7, y2: 11.6 }, // Right side (angled)
+            { x1: 16.9, y1: 11.6, x2: 18.7, y2: 11.6 }, // Front edge
+
+            // Angled divider lines (60° from horizontal)
+            { x1: 11.3, y1: 7.5, x2: 9.5, y2: 12 },    // Left of target
+            { x1: 13.5, y1: 7.5, x2: 11.7, y2: 12 },   // Left boundary
+            { x1: 16.5, y1: 7.5, x2: 14.7, y2: 12 },   // Right boundary
+            { x1: 18.7, y1: 7.5, x2: 16.9, y2: 12 },   // Right of target
+        ],
+        target: {
+            x: 15,    // Center of angled space
+            y: 9.5,   // Middle depth
+            width: 2.5,  // Width tolerance
+            height: 3.5, // Depth tolerance
+            angle: -Math.PI / 2 - Math.PI / 6 // Facing into space at -90° - 30° = -120° (60° from horizontal)
+        },
+        cameraScale: 32,
+        cameraOffset: { x: 15, y: 12 }
     }
 };
 

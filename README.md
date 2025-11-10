@@ -17,10 +17,13 @@ A web-based training application designed to help practice precise parking maneu
   - Driver seat position indicator
   - Real-time steering visualization
 
-- **Three Training Scenarios**:
-  1. **Street to Underground Entrance**: Navigate a 90° left turn from a 2.5m wide street into a 2.4m wide underground entrance
-  2. **Underground Hall to Parking Box**: Enter from the entrance, turn 90° left in the hall, and park in a tight box (2.14m gate, 3m wide, 5.1m long) located 4m from the entrance
+- **Six Training Scenarios**:
+  1. **Street to Underground Entrance**: Navigate a 90° right turn from a 3.5m wide street into a 2.5m wide underground entrance
+  2. **Underground Hall to Parking Box**: Enter from the entrance, turn 90° right in the hall, and park in a tight box (2.14m gate, 3m wide, 5.1m long) at the bottom wall
   3. **Exit Parking Box**: Exit from the parking box and navigate back to the entrance
+  4. **Parallel Parking**: Classic parallel parking maneuver between two cars with a 6m space on a 6m wide street
+  5. **Perpendicular Parking**: Park straight into a 90° perpendicular space between two cars in a parking lot
+  6. **Angle Parking (60°)**: Park into an angled parking space at 60° - easier entry than perpendicular parking
 
 - **Interactive Controls**:
   - Arrow keys for steering and acceleration
