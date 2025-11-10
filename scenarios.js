@@ -3,30 +3,31 @@
 const SCENARIOS = {
     1: {
         name: "Street to Underground Entrance",
-        description: "Navigate from a 2.5m wide street through a 90° left turn into a 2.4m wide underground entrance",
-        startPosition: { x: 15, y: 8, angle: 0 }, // Start at beginning of street, facing right
+        description: "Navigate from a 3m wide street through a 90° left turn into a 2.5m wide underground entrance",
+        startPosition: { x: 12, y: 8, angle: 0 }, // Start at beginning of street, facing right (left to right)
         walls: [
-            // Street boundaries (horizontal street on right side)
-            { x1: 10, y1: 6.75, x2: 25, y2: 6.75 }, // Top wall of street
-            { x1: 10, y1: 9.25, x2: 25, y2: 9.25 }, // Bottom wall of street
+            // Street boundaries (horizontal street, 3m wide, car drives left to right)
+            { x1: 5, y1: 6.5, x2: 25, y2: 6.5 },   // Top wall of street
+            { x1: 5, y1: 9.5, x2: 25, y2: 9.5 },   // Bottom wall of street
 
-            // Underground entrance (vertical entrance on left)
-            { x1: 8.8, y1: 3, x2: 8.8, y2: 8 },     // Left wall of entrance
-            { x1: 11.2, y1: 3, x2: 11.2, y2: 8 },   // Right wall of entrance
+            // Underground entrance (vertical entrance on left, 2.5m wide, centered in middle of street)
+            { x1: 8.75, y1: 3, x2: 8.75, y2: 8 },   // Left wall of entrance
+            { x1: 11.25, y1: 3, x2: 11.25, y2: 8 }, // Right wall of entrance
 
-            // Corner walls connecting street to entrance
-            { x1: 10, y1: 6.75, x2: 11.2, y2: 6.75 }, // Top corner
-            { x1: 8.8, y1: 8, x2: 10, y2: 8 },        // Transition wall top
-            { x1: 10, y1: 8, x2: 10, y2: 9.25 },      // Vertical transition
+            // Corner walls connecting street to entrance (centered)
+            { x1: 10, y1: 6.5, x2: 11.25, y2: 6.5 }, // Top corner connection
+            { x1: 8.75, y1: 8, x2: 10, y2: 8 },      // Transition wall top
+            { x1: 10, y1: 8, x2: 10, y2: 9.5 },      // Vertical transition
 
             // End walls
-            { x1: 8.8, y1: 3, x2: 11.2, y2: 3 },      // Entrance end
-            { x1: 25, y1: 6.75, x2: 25, y2: 9.25 },   // Street end
+            { x1: 8.75, y1: 3, x2: 11.25, y2: 3 },  // Entrance end
+            { x1: 25, y1: 6.5, x2: 25, y2: 9.5 },   // Street end (right side)
+            { x1: 5, y1: 6.5, x2: 5, y2: 9.5 },     // Street start (left side)
         ],
         target: {
             x: 10,
             y: 4.5,
-            width: 2.4,
+            width: 2.5,
             height: 1.5,
             angle: -Math.PI / 2 // Facing down
         },
@@ -36,95 +37,101 @@ const SCENARIOS = {
 
     2: {
         name: "Underground Hall to Parking Box",
-        description: "Enter from 2.4m entrance, turn 90° left in the hall, and park in box 4m from entrance",
-        startPosition: { x: 15, y: 8, angle: -Math.PI / 2 }, // Start in entrance, facing down/left
+        description: "Enter from 2.5m entrance, turn 90° right in the hall, and park in box at bottom wall",
+        startPosition: { x: 15, y: 8, angle: -Math.PI / 2 }, // Start in entrance, facing down
         walls: [
-            // Entrance (2.4m wide, vertical)
-            { x1: 13.8, y1: 8, x2: 13.8, y2: 12 },   // Left wall of entrance
-            { x1: 16.2, y1: 8, x2: 16.2, y2: 12 },   // Right wall of entrance
-            { x1: 13.8, y1: 12, x2: 16.2, y2: 12 },  // Top of entrance (street side)
+            // Entrance (2.5m wide, vertical)
+            { x1: 13.75, y1: 8, x2: 13.75, y2: 12 },  // Left wall of entrance
+            { x1: 16.25, y1: 8, x2: 16.25, y2: 12 },  // Right wall of entrance
+            { x1: 13.75, y1: 12, x2: 16.25, y2: 12 }, // Top of entrance (street side)
 
             // Wall to the right of entrance (6m long)
-            { x1: 16.2, y1: 2, x2: 16.2, y2: 8 },    // Right wall continuing down
+            { x1: 16.25, y1: 2, x2: 16.25, y2: 8 },   // Right wall continuing down
 
             // Hall extending to the left (15m)
-            { x1: 1, y1: 8, x2: 13.8, y2: 8 },       // Top wall of hall
-            { x1: 1, y1: 2, x2: 1, y2: 8 },          // Left end wall
-            { x1: 1, y1: 2, x2: 16.2, y2: 2 },       // Bottom wall of hall
+            { x1: 1, y1: 8, x2: 13.75, y2: 8 },       // Top wall of hall
+            { x1: 1, y1: 2, x2: 1, y2: 8 },           // Left end wall
 
-            // Parking box (4m from entrance on the same side)
+            // Bottom wall of hall (split by parking box gate)
+            { x1: 1, y1: 2, x2: 7.66, y2: 2 },        // Bottom wall - left of box
+            { x1: 7.66, y1: 2, x2: 8.09, y2: 2 },     // Box wall - left of gate
+            // Gate opening from x=8.09 to x=10.23 (2.14m wide)
+            { x1: 10.23, y1: 2, x2: 10.66, y2: 2 },   // Box wall - right of gate
+            { x1: 10.66, y1: 2, x2: 16.25, y2: 2 },   // Bottom wall - right of box
+
+            // Parking box (extending downward from bottom wall)
             // Box gate 2.14m, total width 3m, length 5.1m
-            // Box starts 4m from entrance (x = 13.8 - 4 = 9.8)
-            { x1: 9.8, y1: 8, x2: 7.66, y2: 8 },     // Left side of box opening
-            { x1: 7.66, y1: 8, x2: 7.66, y2: 3 },    // Box left wall (5m deep, using 3m for parking + 2m approach)
-            { x1: 7.66, y1: 3, x2: 10.66, y2: 3 },   // Box back wall (3m wide)
-            { x1: 10.66, y1: 3, x2: 10.66, y2: 8 },  // Box right wall
-            { x1: 10.66, y1: 8, x2: 11.94, y2: 8 },  // Right side of box opening (gate is 2.14m, starts at 11.94)
-            { x1: 11.94, y1: 8, x2: 13.8, y2: 8 },   // Wall between box and entrance
+            // Box center at x=9.16, gate center at x=9.16
+            { x1: 7.66, y1: 2, x2: 7.66, y2: -3.1 },    // Box left wall (5.1m deep)
+            { x1: 7.66, y1: -3.1, x2: 10.66, y2: -3.1 }, // Box back wall (3m wide)
+            { x1: 10.66, y1: -3.1, x2: 10.66, y2: 2 },  // Box right wall (5.1m deep)
         ],
         parkingBox: {
             x: 7.66,
-            y: 3,
+            y: -3.1,
             width: 3,
-            height: 5,
+            height: 5.1,
             gateWidth: 2.14,
-            gateCenter: 9.16 // Center of the gate
+            gateCenter: 9.16 // Center of the gate at y=2
         },
         target: {
             x: 9.16,
-            y: 4.5,
+            y: -0.55,  // Center of box depth: 2 - 5.1/2 = -0.55
             width: 2.5,
             height: 4,
             angle: -Math.PI / 2 // Facing into the box (down)
         },
         cameraScale: 35,
-        cameraOffset: { x: 10, y: 6 }
+        cameraOffset: { x: 10, y: 2 }
     },
 
     3: {
         name: "Exit Parking Box",
-        description: "Exit from parking box and navigate back to the entrance",
-        startPosition: { x: 9.16, y: 4.5, angle: -Math.PI / 2 }, // Start inside box, facing out
+        description: "Exit from parking box at bottom wall and navigate back to the entrance",
+        startPosition: { x: 9.16, y: -0.55, angle: Math.PI / 2 }, // Start inside box, facing up/out
         walls: [
             // Same walls as scenario 2
-            // Entrance
-            { x1: 13.8, y1: 8, x2: 13.8, y2: 12 },
-            { x1: 16.2, y1: 8, x2: 16.2, y2: 12 },
-            { x1: 13.8, y1: 12, x2: 16.2, y2: 12 },
+            // Entrance (2.5m wide, vertical)
+            { x1: 13.75, y1: 8, x2: 13.75, y2: 12 },
+            { x1: 16.25, y1: 8, x2: 16.25, y2: 12 },
+            { x1: 13.75, y1: 12, x2: 16.25, y2: 12 },
 
             // Wall to the right
-            { x1: 16.2, y1: 2, x2: 16.2, y2: 8 },
+            { x1: 16.25, y1: 2, x2: 16.25, y2: 8 },
 
             // Hall
-            { x1: 1, y1: 8, x2: 13.8, y2: 8 },
+            { x1: 1, y1: 8, x2: 13.75, y2: 8 },
             { x1: 1, y1: 2, x2: 1, y2: 8 },
-            { x1: 1, y1: 2, x2: 16.2, y2: 2 },
 
-            // Parking box
-            { x1: 9.8, y1: 8, x2: 7.66, y2: 8 },
-            { x1: 7.66, y1: 8, x2: 7.66, y2: 3 },
-            { x1: 7.66, y1: 3, x2: 10.66, y2: 3 },
-            { x1: 10.66, y1: 3, x2: 10.66, y2: 8 },
-            { x1: 10.66, y1: 8, x2: 11.94, y2: 8 },
-            { x1: 11.94, y1: 8, x2: 13.8, y2: 8 },
+            // Bottom wall of hall (split by parking box gate)
+            { x1: 1, y1: 2, x2: 7.66, y2: 2 },
+            { x1: 7.66, y1: 2, x2: 8.09, y2: 2 },
+            // Gate opening from x=8.09 to x=10.23
+            { x1: 10.23, y1: 2, x2: 10.66, y2: 2 },
+            { x1: 10.66, y1: 2, x2: 16.25, y2: 2 },
+
+            // Parking box (extending downward from bottom wall)
+            { x1: 7.66, y1: 2, x2: 7.66, y2: -3.1 },
+            { x1: 7.66, y1: -3.1, x2: 10.66, y2: -3.1 },
+            { x1: 10.66, y1: -3.1, x2: 10.66, y2: 2 },
         ],
         parkingBox: {
             x: 7.66,
-            y: 3,
+            y: -3.1,
             width: 3,
-            height: 5,
+            height: 5.1,
             gateWidth: 2.14,
             gateCenter: 9.16
         },
         target: {
             x: 15,
             y: 10,
-            width: 2.4,
+            width: 2.5,
             height: 1.5,
             angle: Math.PI / 2 // Facing up (toward exit)
         },
         cameraScale: 35,
-        cameraOffset: { x: 10, y: 6 }
+        cameraOffset: { x: 10, y: 2 }
     }
 };
 
