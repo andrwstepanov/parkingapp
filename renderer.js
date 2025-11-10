@@ -139,20 +139,28 @@ class Renderer {
 
     // Draw the car
     drawCar(car) {
-        const corners = car.getCorners();
-        const screenCorners = corners.map(c => this.worldToScreen(c.x, c.y));
+        const pos = this.worldToScreen(car.x, car.y);
 
-        // Draw car body shadow
+        this.ctx.save();
+        this.ctx.translate(pos.x, pos.y);
+        this.ctx.rotate(car.angle);
+
+        const scale = this.scale;
+
+        // Toyota C-HR dimensions in scaled units
+        const front = (car.wheelbase + car.frontOverhang) * scale;
+        const rear = -car.rearOverhang * scale;
+        const halfWidth = (car.width / 2) * scale;
+
+        // Draw shadow first
+        this.ctx.save();
+        this.ctx.translate(3, 3);
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-        this.ctx.beginPath();
-        screenCorners.forEach((corner, i) => {
-            if (i === 0) this.ctx.moveTo(corner.x + 3, corner.y + 3);
-            else this.ctx.lineTo(corner.x + 3, corner.y + 3);
-        });
-        this.ctx.closePath();
+        this.drawCHRBody(front, rear, halfWidth, scale);
         this.ctx.fill();
+        this.ctx.restore();
 
-        // Draw car body
+        // Draw car body with C-HR curves
         if (car.colliding) {
             this.ctx.fillStyle = '#e74c3c';
             this.ctx.strokeStyle = '#c0392b';
@@ -162,14 +170,11 @@ class Renderer {
         }
         this.ctx.lineWidth = 3;
 
-        this.ctx.beginPath();
-        screenCorners.forEach((corner, i) => {
-            if (i === 0) this.ctx.moveTo(corner.x, corner.y);
-            else this.ctx.lineTo(corner.x, corner.y);
-        });
-        this.ctx.closePath();
+        this.drawCHRBody(front, rear, halfWidth, scale);
         this.ctx.fill();
         this.ctx.stroke();
+
+        this.ctx.restore();
 
         // Draw car details
         this.drawCarDetails(car);
@@ -179,6 +184,73 @@ class Renderer {
 
         // Draw wheels
         this.drawWheels(car);
+    }
+
+    // Draw Toyota C-HR body shape with curves
+    drawCHRBody(front, rear, halfWidth, scale) {
+        const rearCornerRadius = 8 * scale / 40; // Adjust corner radius based on scale
+        const frontCornerRadius = 10 * scale / 40;
+
+        // C-HR has a distinctive tapered shape - narrower at front, wider at rear
+        const frontWidthFactor = 0.92; // Front is slightly narrower
+        const frontHalfWidth = halfWidth * frontWidthFactor;
+
+        // Control points for body curve (C-HR has sculpted sides)
+        const midPoint = (front + rear) / 2;
+        const bodyBulge = halfWidth * 0.08; // Slight outward curve at door area
+
+        this.ctx.beginPath();
+
+        // Start at rear left corner
+        this.ctx.moveTo(rear + rearCornerRadius, -halfWidth);
+
+        // Rear left corner (rounded)
+        this.ctx.arcTo(rear, -halfWidth, rear, -halfWidth + rearCornerRadius, rearCornerRadius);
+
+        // Left side - with curve bulging out at door area (sculpted body line)
+        this.ctx.lineTo(rear, -halfWidth * 0.6);
+        this.ctx.quadraticCurveTo(
+            midPoint, -(halfWidth + bodyBulge),  // Control point - curves outward
+            front * 0.7, -frontHalfWidth * 0.8
+        );
+
+        // Front left corner area (more rounded for C-HR's smooth front end)
+        this.ctx.quadraticCurveTo(
+            front * 0.9, -frontHalfWidth,
+            front - frontCornerRadius, -frontHalfWidth
+        );
+
+        // Front left corner
+        this.ctx.arcTo(front, -frontHalfWidth, front, -frontHalfWidth + frontCornerRadius, frontCornerRadius);
+
+        // Front edge (slightly curved, not completely flat)
+        this.ctx.quadraticCurveTo(
+            front, 0,
+            front, frontHalfWidth - frontCornerRadius
+        );
+
+        // Front right corner
+        this.ctx.arcTo(front, frontHalfWidth, front - frontCornerRadius, frontHalfWidth, frontCornerRadius);
+
+        // Right side - with curve bulging out at door area
+        this.ctx.quadraticCurveTo(
+            front * 0.9, frontHalfWidth,
+            front * 0.7, frontHalfWidth * 0.8
+        );
+
+        this.ctx.quadraticCurveTo(
+            midPoint, halfWidth + bodyBulge,  // Control point - curves outward
+            rear, halfWidth * 0.6
+        );
+
+        // Rear right corner
+        this.ctx.lineTo(rear, halfWidth - rearCornerRadius);
+        this.ctx.arcTo(rear, halfWidth, rear + rearCornerRadius, halfWidth, rearCornerRadius);
+
+        // Rear edge (C-HR has distinctive tailgate)
+        this.ctx.lineTo(rear + rearCornerRadius, -halfWidth);
+
+        this.ctx.closePath();
     }
 
     drawCarDetails(car) {
@@ -191,25 +263,40 @@ class Renderer {
         const scale = this.scale;
         const bodyColor = car.colliding ? '#c0392b' : '#2980b9';
 
-        // Draw wheel arches (before other details)
+        // Draw wheel arches with curved openings
         this.ctx.fillStyle = car.colliding ? '#a93226' : '#1f5f8b';
 
-        // Front wheel arches
+        // Front wheel arches (at front axle)
         const frontArchX = car.wheelbase * scale;
-        const archWidth = CAR_SPECS.wheelDiameter * 1.1 * scale;
-        const archHeight = car.width * 0.45 * scale;
+        const archRadius = CAR_SPECS.wheelDiameter * 0.6 * scale;
 
-        this.ctx.fillRect(frontArchX - archWidth / 2, -archHeight / 2, archWidth, archHeight);
+        // Front left arch
+        this.ctx.beginPath();
+        this.ctx.arc(frontArchX, -car.width * 0.38 * scale, archRadius, 0, Math.PI * 2);
+        this.ctx.fill();
 
-        // Rear wheel arches
-        this.ctx.fillRect(-archWidth / 2, -archHeight / 2, archWidth, archHeight);
+        // Front right arch
+        this.ctx.beginPath();
+        this.ctx.arc(frontArchX, car.width * 0.38 * scale, archRadius, 0, Math.PI * 2);
+        this.ctx.fill();
 
-        // Draw windshield (C-HR has a swept-back design)
-        const windshieldStartX = car.wheelbase * 0.4 * scale;
-        const windshieldEndX = car.wheelbase * 0.7 * scale;
+        // Rear wheel arches (at rear axle - position 0)
+        // Rear left arch
+        this.ctx.beginPath();
+        this.ctx.arc(0, -car.width * 0.38 * scale, archRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Rear right arch
+        this.ctx.beginPath();
+        this.ctx.arc(0, car.width * 0.38 * scale, archRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Draw windshield at FRONT (C-HR has swept-back windshield behind front axle)
+        const windshieldStartX = car.wheelbase * 0.75 * scale; // Starts just behind front axle
+        const windshieldEndX = (car.wheelbase + car.frontOverhang * 0.3) * scale;
         const windshieldWidth = car.width * 0.65 * scale;
 
-        this.ctx.fillStyle = 'rgba(150, 190, 220, 0.6)';
+        this.ctx.fillStyle = 'rgba(150, 190, 220, 0.7)';
         this.ctx.beginPath();
         this.ctx.moveTo(windshieldStartX, -windshieldWidth / 2);
         this.ctx.lineTo(windshieldEndX, -windshieldWidth / 2);
@@ -218,72 +305,100 @@ class Renderer {
         this.ctx.closePath();
         this.ctx.fill();
 
-        // Draw front windshield slope line (A-pillar)
+        // Draw A-pillar (windshield edge) at front
         this.ctx.strokeStyle = car.colliding ? '#7f1d1d' : '#1a4d6d';
-        this.ctx.lineWidth = 2;
+        this.ctx.lineWidth = 2.5;
         this.ctx.beginPath();
         this.ctx.moveTo(windshieldStartX, -windshieldWidth / 2);
         this.ctx.lineTo(windshieldStartX, windshieldWidth / 2);
         this.ctx.stroke();
 
-        // Draw rear window (C-HR has distinctive rear glass)
-        const rearWindowX = car.wheelbase * 0.1 * scale;
-        const rearWindowWidth = car.width * 0.55 * scale;
-        const rearWindowLength = car.wheelbase * 0.25 * scale;
+        // Draw side windows at front (front doors)
+        const frontDoorWindowX = car.wheelbase * 0.82 * scale;
+        const doorWindowWidth = car.width * 0.5 * scale;
+        const doorWindowLength = car.wheelbase * 0.2 * scale;
+
+        this.ctx.fillStyle = 'rgba(150, 190, 220, 0.6)';
+        this.ctx.fillRect(frontDoorWindowX - doorWindowLength / 2, -doorWindowWidth / 2,
+                         doorWindowLength, doorWindowWidth);
+
+        // Draw rear window (C-HR has distinctive sloping rear glass)
+        const rearWindowX = car.wheelbase * 0.15 * scale;
+        const rearWindowWidth = car.width * 0.5 * scale;
+        const rearWindowLength = car.wheelbase * 0.3 * scale;
 
         this.ctx.fillStyle = 'rgba(130, 170, 200, 0.5)';
         this.ctx.fillRect(rearWindowX - rearWindowLength / 2, -rearWindowWidth / 2,
                          rearWindowLength, rearWindowWidth);
 
-        // Draw roof line
+        // Draw roof line (coupe-style sloping roof)
         this.ctx.strokeStyle = car.colliding ? '#8b1e1e' : '#1e5a7a';
         this.ctx.lineWidth = 2.5;
         this.ctx.beginPath();
-        this.ctx.moveTo(windshieldStartX, -car.width * 0.35 * scale);
-        this.ctx.lineTo(rearWindowX, -car.width * 0.35 * scale);
-        this.ctx.moveTo(windshieldStartX, car.width * 0.35 * scale);
-        this.ctx.lineTo(rearWindowX, car.width * 0.35 * scale);
+        // Left roof line - slopes down from front to rear
+        this.ctx.moveTo(windshieldEndX, -car.width * 0.32 * scale);
+        this.ctx.lineTo(rearWindowX - rearWindowLength / 2, -car.width * 0.25 * scale);
+        // Right roof line
+        this.ctx.moveTo(windshieldEndX, car.width * 0.32 * scale);
+        this.ctx.lineTo(rearWindowX - rearWindowLength / 2, car.width * 0.25 * scale);
         this.ctx.stroke();
 
-        // Draw hood line
+        // Draw hood line at front
         const hoodX = (car.wheelbase + car.frontOverhang * 0.6) * scale;
         this.ctx.strokeStyle = car.colliding ? '#c0392b' : '#2c3e50';
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
-        this.ctx.moveTo(hoodX, -car.width * 0.4 * scale);
-        this.ctx.lineTo(hoodX, car.width * 0.4 * scale);
+        this.ctx.moveTo(hoodX, -car.width * 0.37 * scale);
+        this.ctx.lineTo(hoodX, car.width * 0.37 * scale);
         this.ctx.stroke();
 
-        // Draw headlights
-        const headlightX = (car.wheelbase + car.frontOverhang * 0.85) * scale;
-        const headlightY = car.width * 0.35 * scale;
-        const headlightSize = 0.15 * scale;
+        // Draw headlights at front
+        const headlightX = (car.wheelbase + car.frontOverhang * 0.87) * scale;
+        const headlightY = car.width * 0.32 * scale;
+        const headlightSize = 0.18 * scale;
 
-        this.ctx.fillStyle = '#f0f0f0';
+        this.ctx.fillStyle = '#f5f5f5';
         this.ctx.fillRect(headlightX - headlightSize / 2, -headlightY - headlightSize / 2,
-                         headlightSize, headlightSize);
+                         headlightSize, headlightSize * 0.7);
         this.ctx.fillRect(headlightX - headlightSize / 2, headlightY - headlightSize / 2,
-                         headlightSize, headlightSize);
+                         headlightSize, headlightSize * 0.7);
 
-        // Draw taillights
-        const taillightX = -(car.rearOverhang * 0.8) * scale;
+        // Draw taillights at rear
+        const taillightX = -(car.rearOverhang * 0.85) * scale;
         const taillightY = car.width * 0.35 * scale;
-        const taillightSize = 0.12 * scale;
+        const taillightSize = 0.14 * scale;
 
-        this.ctx.fillStyle = '#ff3333';
+        this.ctx.fillStyle = '#ff2222';
         this.ctx.fillRect(taillightX - taillightSize / 2, -taillightY - taillightSize / 2,
-                         taillightSize, taillightSize);
+                         taillightSize * 0.7, taillightSize);
         this.ctx.fillRect(taillightX - taillightSize / 2, taillightY - taillightSize / 2,
-                         taillightSize, taillightSize);
+                         taillightSize * 0.7, taillightSize);
 
-        // Draw C-HR character line (body crease)
-        this.ctx.strokeStyle = car.colliding ? '#a93226' : '#236fa5';
+        // Draw C-HR character lines (distinctive body creases running along sides)
+        this.ctx.strokeStyle = car.colliding ? '#a93226' : '#1565a8';
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        // Upper character line (from front to rear, curves upward)
+        this.ctx.moveTo((car.wheelbase + car.frontOverhang * 0.4) * scale, -car.width * 0.46 * scale);
+        this.ctx.quadraticCurveTo(
+            car.wheelbase * 0.5 * scale, -car.width * 0.49 * scale,
+            -car.rearOverhang * 0.3 * scale, -car.width * 0.47 * scale
+        );
+        this.ctx.moveTo((car.wheelbase + car.frontOverhang * 0.4) * scale, car.width * 0.46 * scale);
+        this.ctx.quadraticCurveTo(
+            car.wheelbase * 0.5 * scale, car.width * 0.49 * scale,
+            -car.rearOverhang * 0.3 * scale, car.width * 0.47 * scale
+        );
+        this.ctx.stroke();
+
+        // Draw door lines (between front and rear doors)
+        this.ctx.strokeStyle = car.colliding ? '#8b1e1e' : '#1a5080';
         this.ctx.lineWidth = 1.5;
         this.ctx.beginPath();
-        this.ctx.moveTo((car.wheelbase + car.frontOverhang * 0.5) * scale, -car.width * 0.45 * scale);
-        this.ctx.lineTo(-car.rearOverhang * 0.3 * scale, -car.width * 0.48 * scale);
-        this.ctx.moveTo((car.wheelbase + car.frontOverhang * 0.5) * scale, car.width * 0.45 * scale);
-        this.ctx.lineTo(-car.rearOverhang * 0.3 * scale, car.width * 0.48 * scale);
+        this.ctx.moveTo(car.wheelbase * 0.55 * scale, -car.width * 0.42 * scale);
+        this.ctx.lineTo(car.wheelbase * 0.55 * scale, -car.width * 0.15 * scale);
+        this.ctx.moveTo(car.wheelbase * 0.55 * scale, car.width * 0.42 * scale);
+        this.ctx.lineTo(car.wheelbase * 0.55 * scale, car.width * 0.15 * scale);
         this.ctx.stroke();
 
         this.ctx.restore();

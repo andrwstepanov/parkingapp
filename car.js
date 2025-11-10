@@ -86,10 +86,11 @@ class Car {
         const sin = Math.sin(this.angle);
 
         // Positions relative to rear axle
-        // Toyota C-HR is left-hand drive in most markets
-        const mirrorX = this.wheelbase * 0.3; // Mirrors at 30% of wheelbase
+        // Toyota C-HR is left-hand drive - driver and mirrors are at the FRONT
+        // Front axle is at `wheelbase` distance from rear axle
+        const mirrorX = this.wheelbase * 0.85; // Mirrors near front doors, just before front axle
         const mirrorY = this.width / 2 + 0.15; // Slightly outside car width
-        const driverX = this.wheelbase * 0.3; // Driver seat at ~30% of wheelbase (A-pillar area)
+        const driverX = this.wheelbase * 0.90; // Driver seat at front, just behind front axle
         const driverY = -(this.width / 2 - 0.35); // LEFT side for left-hand drive, inset 0.35m from edge
 
         return {
