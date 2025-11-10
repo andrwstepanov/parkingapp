@@ -12,10 +12,11 @@
  *   - Front track: 1.54m (distance between left/right front wheels)
  *
  * TURNING CHARACTERISTICS:
- *   - Kerb-to-kerb turning circle: 10.4m diameter (5.2m radius)
+ *   - Kerb-to-kerb turning circle: 10.4m diameter (5.2m radius at outer front wheel)
+ *   - Rear axle turning radius: 4.43m (5.2m - track_width/2 = 5.2 - 0.77)
  *   - Wall-to-wall turning circle: ~11.0m diameter
- *   - Max steering angle at full lock: ~27° (0.471 rad) single-track equivalent
- *   - Inner front wheel angle: ~31° at full lock
+ *   - Max steering angle at full lock: ~31° (0.542 rad) measured at inner front wheel
+ *   - Single-track equivalent: ~27° (calculated from rear axle turning radius)
  *   - Outer front wheel angle: ~24° at full lock
  *
  * STEERING SYSTEM:
@@ -34,14 +35,19 @@
  *
  * PHYSICS MODEL:
  *   - Uses bicycle model: R = L / tan(δ) where L=wheelbase, δ=steering angle
+ *   - R is measured from turning center to REAR AXLE (not outer front wheel)
  *   - Trajectory prediction uses identical physics to car movement
  *   - Angular velocity: ω = v / R where v=speed, R=turning radius
+ *
+ * IMPORTANT: Kerb-to-kerb measurement (10.4m) is at OUTER FRONT WHEEL.
+ *   For bicycle model, we need rear axle radius:
+ *   R_rear = R_kerb - (track_width / 2) = 5.2m - 0.77m = 4.43m
  */
 const CAR_SPECS = {
     length: 4.39,           // Total length
     width: 1.795,           // Total width (mirrors NOT included - they can fold)
     wheelbase: 2.64,        // Distance between front and rear axles
-    turningRadius: 5.2,     // Kerb-to-kerb turning radius (10.4m circle diameter)
+    turningRadius: 4.43,    // Rear axle turning radius (kerb-to-kerb 5.2m - track/2)
     frontOverhang: 0.88,    // Distance from front axle to front bumper
     rearOverhang: 0.87,     // Distance from rear axle to rear bumper
     trackWidth: 1.54,       // Front track width
@@ -57,8 +63,8 @@ const CAR_SPECS = {
 
 // Calculate maximum steering angle from turning radius
 // Using bicycle model formula: tan(angle) = wheelbase / turning_radius
-// Result: Single-track steer angle at full lock = ~27° (0.471 radians)
-// This matches the measured value from Toyota's 10.4m kerb-to-kerb turning circle
+// Result: atan(2.64 / 4.43) = 0.542 radians = 31.1°
+// This matches the measured inner front wheel angle of ~31° at full lock
 CAR_SPECS.maxSteeringAngle = Math.atan(CAR_SPECS.wheelbase / CAR_SPECS.turningRadius);
 
 class Car {
