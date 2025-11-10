@@ -7,17 +7,16 @@ const SCENARIOS = {
         startPosition: { x: 12, y: 8, angle: 0 }, // Start at beginning of street, facing right (left to right)
         walls: [
             // Street boundaries (horizontal street, 3m wide, car drives left to right)
-            { x1: 5, y1: 6.5, x2: 25, y2: 6.5 },   // Top wall of street
-            { x1: 5, y1: 9.5, x2: 25, y2: 9.5 },   // Bottom wall of street
+            { x1: 5, y1: 6.5, x2: 8.75, y2: 6.5 },   // Top wall of street (before entrance)
+            { x1: 11.25, y1: 6.5, x2: 25, y2: 6.5 }, // Top wall of street (after entrance)
+            { x1: 5, y1: 9.5, x2: 8.75, y2: 9.5 },   // Bottom wall of street (before entrance)
+            { x1: 11.25, y1: 9.5, x2: 25, y2: 9.5 }, // Bottom wall of street (after entrance)
 
-            // Underground entrance (vertical entrance on left, 2.5m wide, centered in middle of street)
-            { x1: 8.75, y1: 3, x2: 8.75, y2: 8 },   // Left wall of entrance
-            { x1: 11.25, y1: 3, x2: 11.25, y2: 8 }, // Right wall of entrance
-
-            // Corner walls connecting street to entrance (centered)
-            { x1: 10, y1: 6.5, x2: 11.25, y2: 6.5 }, // Top corner connection
-            { x1: 8.75, y1: 8, x2: 10, y2: 8 },      // Transition wall top
-            { x1: 10, y1: 8, x2: 10, y2: 9.5 },      // Vertical transition
+            // Underground entrance (vertical entrance, 2.5m wide, opens into street)
+            { x1: 8.75, y1: 3, x2: 8.75, y2: 6.5 },   // Left wall of entrance
+            { x1: 11.25, y1: 3, x2: 11.25, y2: 6.5 }, // Right wall of entrance
+            { x1: 8.75, y1: 9.5, x2: 8.75, y2: 12 },  // Left wall extension (if needed)
+            { x1: 11.25, y1: 9.5, x2: 11.25, y2: 12 }, // Right wall extension (if needed)
 
             // End walls
             { x1: 8.75, y1: 3, x2: 11.25, y2: 3 },  // Entrance end
