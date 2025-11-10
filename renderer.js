@@ -574,11 +574,196 @@ class Renderer {
             this.drawWheelTraces(wheelTraces);
         }
 
+        // Draw predicted trajectory lines (light blue, before car)
+        this.drawTrajectoryPrediction(car);
+
         // Draw car
         this.drawCar(car);
 
         // Draw steering indicator
         this.drawSteeringIndicator(car);
+    }
+
+    // Draw predicted trajectory based on current steering angle
+    drawTrajectoryPrediction(car) {
+        // Only show trajectory if car is not stationary or steering is applied
+        if (Math.abs(car.steeringAngle) < 0.01) {
+            // Straight trajectory
+            this.drawStraightTrajectory(car);
+        } else {
+            // Curved trajectory based on steering angle
+            this.drawCurvedTrajectory(car);
+        }
+    }
+
+    drawStraightTrajectory(car) {
+        const pos = this.worldToScreen(car.x, car.y);
+
+        this.ctx.save();
+        this.ctx.translate(pos.x, pos.y);
+        this.ctx.rotate(car.angle);
+
+        const scale = this.scale;
+        const trajectoryLength = 5 * scale; // 5 meters ahead/behind
+        const carWidth = car.width * scale;
+
+        this.ctx.strokeStyle = 'rgba(100, 180, 255, 0.4)'; // Light blue translucent
+        this.ctx.lineWidth = 2;
+        this.ctx.setLineDash([10, 5]);
+
+        // Left edge line
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -carWidth / 2);
+        this.ctx.lineTo(trajectoryLength, -carWidth / 2);
+        this.ctx.stroke();
+
+        // Right edge line
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, carWidth / 2);
+        this.ctx.lineTo(trajectoryLength, carWidth / 2);
+        this.ctx.stroke();
+
+        // Center line
+        this.ctx.strokeStyle = 'rgba(100, 180, 255, 0.3)';
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, 0);
+        this.ctx.lineTo(trajectoryLength, 0);
+        this.ctx.stroke();
+
+        // Rear trajectory (for reversing)
+        const rearStart = -car.rearOverhang * scale;
+        const rearLength = -4 * scale; // 4 meters behind
+
+        this.ctx.strokeStyle = 'rgba(100, 180, 255, 0.3)';
+        this.ctx.lineWidth = 2;
+
+        // Left edge line (rear)
+        this.ctx.beginPath();
+        this.ctx.moveTo(rearStart, -carWidth / 2);
+        this.ctx.lineTo(rearStart + rearLength, -carWidth / 2);
+        this.ctx.stroke();
+
+        // Right edge line (rear)
+        this.ctx.beginPath();
+        this.ctx.moveTo(rearStart, carWidth / 2);
+        this.ctx.lineTo(rearStart + rearLength, carWidth / 2);
+        this.ctx.stroke();
+
+        this.ctx.setLineDash([]);
+        this.ctx.restore();
+    }
+
+    drawCurvedTrajectory(car) {
+        const pos = this.worldToScreen(car.x, car.y);
+
+        // Calculate turning radius
+        const turningRadius = car.wheelbase / Math.tan(Math.abs(car.steeringAngle));
+        const scale = this.scale;
+
+        this.ctx.save();
+        this.ctx.strokeStyle = 'rgba(100, 180, 255, 0.4)'; // Light blue translucent
+        this.ctx.lineWidth = 2;
+        this.ctx.setLineDash([10, 5]);
+
+        // Determine turn direction
+        const turnDirection = Math.sign(car.steeringAngle);
+
+        // Calculate center of turning circle in world coordinates
+        const centerAngle = car.angle + (Math.PI / 2) * turnDirection;
+        const centerX = car.x + turningRadius * Math.cos(centerAngle);
+        const centerY = car.y + turningRadius * Math.sin(centerAngle);
+
+        // Calculate arc parameters
+        const trackHalf = car.width / 2;
+        const innerRadius = turningRadius - trackHalf;
+        const outerRadius = turningRadius + trackHalf;
+
+        // Arc length (in radians) - about 3-5 meters of travel
+        const arcLength = 1.2; // radians (about 70 degrees)
+
+        // Calculate start angle for the arc
+        let startAngle = Math.atan2(car.y - centerY, car.x - centerX);
+
+        // Draw inner and outer trajectory arcs (forward)
+        const centerScreen = this.worldToScreen(centerX, centerY);
+
+        // Inner arc
+        this.ctx.beginPath();
+        this.ctx.arc(
+            centerScreen.x,
+            centerScreen.y,
+            innerRadius * scale,
+            startAngle,
+            startAngle + arcLength * turnDirection,
+            turnDirection < 0
+        );
+        this.ctx.stroke();
+
+        // Outer arc
+        this.ctx.beginPath();
+        this.ctx.arc(
+            centerScreen.x,
+            centerScreen.y,
+            outerRadius * scale,
+            startAngle,
+            startAngle + arcLength * turnDirection,
+            turnDirection < 0
+        );
+        this.ctx.stroke();
+
+        // Center arc (lighter)
+        this.ctx.strokeStyle = 'rgba(100, 180, 255, 0.3)';
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.arc(
+            centerScreen.x,
+            centerScreen.y,
+            turningRadius * scale,
+            startAngle,
+            startAngle + arcLength * turnDirection,
+            turnDirection < 0
+        );
+        this.ctx.stroke();
+
+        // Rear trajectory (for reversing)
+        const rearArcLength = -1.0; // Negative for reverse direction
+
+        this.ctx.strokeStyle = 'rgba(100, 180, 255, 0.3)';
+        this.ctx.lineWidth = 2;
+
+        // Calculate rear starting position
+        const rearOffset = car.rearOverhang;
+        const rearX = car.x - rearOffset * Math.cos(car.angle);
+        const rearY = car.y - rearOffset * Math.sin(car.angle);
+        const rearStartAngle = Math.atan2(rearY - centerY, rearX - centerX);
+
+        // Inner arc (rear)
+        this.ctx.beginPath();
+        this.ctx.arc(
+            centerScreen.x,
+            centerScreen.y,
+            innerRadius * scale,
+            rearStartAngle,
+            rearStartAngle + rearArcLength * turnDirection,
+            turnDirection > 0
+        );
+        this.ctx.stroke();
+
+        // Outer arc (rear)
+        this.ctx.beginPath();
+        this.ctx.arc(
+            centerScreen.x,
+            centerScreen.y,
+            outerRadius * scale,
+            rearStartAngle,
+            rearStartAngle + rearArcLength * turnDirection,
+            turnDirection > 0
+        );
+        this.ctx.stroke();
+
+        this.ctx.setLineDash([]);
+        this.ctx.restore();
     }
 
     // Draw wheel trajectory traces
