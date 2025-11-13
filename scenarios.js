@@ -135,7 +135,7 @@ const SCENARIOS = {
 
     4: {
         name: "Parallel Parking",
-        description: "Parallel park between two cars on a 6m wide street with a 6m parking space",
+        description: "Parallel park between two cars on a 6m wide street with a 6.5m parking space",
         startPosition: { x: 20, y: 10, angle: Math.PI }, // Start on street, facing left
         walls: [
             // Street boundaries (6m wide street)
@@ -150,16 +150,16 @@ const SCENARIOS = {
             { x1: 12.5, y1: 7, x2: 12.5, y2: 8.8 },   // Front right corner
             { x1: 8, y1: 8.8, x2: 12.5, y2: 8.8 },    // Front car rear
 
-            // Rear parked car (4.5m long, positioned at x=18.5 to x=23)
-            { x1: 18.5, y1: 7, x2: 18.5, y2: 8.8 },   // Rear left corner
-            { x1: 18.5, y1: 7, x2: 23, y2: 7 },       // Rear side (curb)
-            { x1: 23, y1: 7, x2: 23, y2: 8.8 },       // Rear right corner
-            { x1: 18.5, y1: 8.8, x2: 23, y2: 8.8 },   // Rear car rear
+            // Rear parked car (4.5m long, positioned at x=19 to x=23.5) - moved 0.5m right
+            { x1: 19, y1: 7, x2: 19, y2: 8.8 },       // Rear left corner
+            { x1: 19, y1: 7, x2: 23.5, y2: 7 },       // Rear side (curb)
+            { x1: 23.5, y1: 7, x2: 23.5, y2: 8.8 },   // Rear right corner
+            { x1: 19, y1: 8.8, x2: 23.5, y2: 8.8 },   // Rear car rear
         ],
         target: {
-            x: 15.5,  // Center of 6m space
+            x: 15.75, // Center of 6.5m space (12.5 to 19)
             y: 7.9,   // Close to curb
-            width: 5, // Lenient width tolerance
+            width: 5.5, // Lenient width tolerance
             height: 1.5, // Depth tolerance
             angle: Math.PI // Facing left, parallel to street
         },

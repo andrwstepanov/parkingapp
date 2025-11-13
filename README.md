@@ -27,7 +27,7 @@ A web-based training application designed to help practice precise parking maneu
   1. **Street to Underground Entrance**: Navigate a 90° right turn from a 4.5m wide street into a 2.7m wide underground entrance
   2. **Underground Hall to Parking Box**: Enter from 2.7m entrance, turn 90° right in the hall, and park in a tight box (2.14m gate, 3m wide, 5.1m long) at the bottom wall
   3. **Exit Parking Box**: Exit from the parking box and navigate back to the entrance
-  4. **Parallel Parking**: Classic parallel parking maneuver between two cars with a 6m space on a 6m wide street
+  4. **Parallel Parking**: Classic parallel parking maneuver between two cars with a 6.5m space on a 6m wide street
   5. **Perpendicular Parking**: Park straight into a 90° perpendicular space between two cars in a parking lot
   6. **Angle Parking (60°)**: Park into an angled parking space at 60° - easier entry than perpendicular parking
 
