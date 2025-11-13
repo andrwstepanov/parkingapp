@@ -220,10 +220,11 @@ class Car {
         const mirrorX = 2.102; // Official spec: 1.45m from front bumper
         const mirrorY = this.width / 2 + 0.19; // 180-200mm extended from body (using 190mm avg)
 
-        // Driver seat at A-pillar base: ~1,200mm from front bumper
-        // From rear axle: 3.552 - 1.2 = 2.352m
-        const driverX = 2.352; // Official spec: A-pillar base at 1.2m from front bumper
-        const driverY = -(this.width / 2 - 0.35); // LEFT side for left-hand drive, inset 0.35m from edge
+        // Driver seat H-point (official seating position from technical specs)
+        // H-Point: 1,800mm from front bumper, -385mm from centerline (LHD)
+        // From rear axle: 3.552 - 1.8 = 1.752m
+        const driverX = 1.752; // Official H-point: 1.8m from front bumper
+        const driverY = -0.385; // Official H-point: 385mm left of centerline (LHD)
 
         return {
             leftMirror: {
