@@ -3,25 +3,25 @@
 const SCENARIOS = {
     1: {
         name: "Street to Underground Entrance",
-        description: "Navigate from a 3.5m wide street through a 90° right turn into a 2.5m wide underground entrance",
+        description: "Navigate from a 4.5m wide street through a 90° right turn into a 2.7m wide underground entrance",
         startPosition: { x: 18, y: 8, angle: Math.PI }, // Start at beginning of street, facing left (right to left)
         walls: [
-            // Street boundaries (horizontal street, 3.5m wide, car drives right to left)
-            { x1: 5, y1: 6.25, x2: 8.75, y2: 6.25 },   // Top wall of street (before entrance)
-            { x1: 11.25, y1: 6.25, x2: 25, y2: 6.25 }, // Top wall of street (after entrance)
-            { x1: 5, y1: 9.75, x2: 8.75, y2: 9.75 },   // Bottom wall of street (before entrance)
-            { x1: 11.25, y1: 9.75, x2: 25, y2: 9.75 }, // Bottom wall of street (after entrance)
+            // Street boundaries (horizontal street, 4.5m wide, car drives right to left)
+            { x1: 5, y1: 5.75, x2: 8.65, y2: 5.75 },   // Top wall of street (before entrance)
+            { x1: 11.35, y1: 5.75, x2: 25, y2: 5.75 }, // Top wall of street (after entrance)
+            { x1: 5, y1: 10.25, x2: 8.65, y2: 10.25 },   // Bottom wall of street (before entrance)
+            { x1: 11.35, y1: 10.25, x2: 25, y2: 10.25 }, // Bottom wall of street (after entrance)
 
-            // Underground entrance (vertical entrance, 2.5m wide, opens into street)
-            { x1: 8.75, y1: 3, x2: 8.75, y2: 6.25 },   // Left wall of entrance
-            { x1: 11.25, y1: 3, x2: 11.25, y2: 6.25 }, // Right wall of entrance
-            { x1: 8.75, y1: 9.75, x2: 8.75, y2: 12 },  // Left wall extension (if needed)
-            { x1: 11.25, y1: 9.75, x2: 11.25, y2: 12 }, // Right wall extension (if needed)
+            // Underground entrance (vertical entrance, 2.7m wide, opens into street)
+            { x1: 8.65, y1: 3, x2: 8.65, y2: 5.75 },   // Left wall of entrance
+            { x1: 11.35, y1: 3, x2: 11.35, y2: 5.75 }, // Right wall of entrance
+            { x1: 8.65, y1: 10.25, x2: 8.65, y2: 12 },  // Left wall extension (if needed)
+            { x1: 11.35, y1: 10.25, x2: 11.35, y2: 12 }, // Right wall extension (if needed)
 
             // End walls
-            { x1: 8.75, y1: 3, x2: 11.25, y2: 3 },  // Entrance end
-            { x1: 25, y1: 6.25, x2: 25, y2: 9.75 },   // Street end (right side)
-            { x1: 5, y1: 6.25, x2: 5, y2: 9.75 },     // Street start (left side)
+            { x1: 8.65, y1: 3, x2: 11.35, y2: 3 },  // Entrance end
+            { x1: 25, y1: 5.75, x2: 25, y2: 10.25 },   // Street end (right side)
+            { x1: 5, y1: 5.75, x2: 5, y2: 10.25 },     // Street start (left side)
         ],
         target: {
             x: 10,
@@ -36,19 +36,19 @@ const SCENARIOS = {
 
     2: {
         name: "Underground Hall to Parking Box",
-        description: "Enter from 2.5m entrance, turn 90° right in the hall, and park in box at bottom wall",
+        description: "Enter from 2.7m entrance, turn 90° right in the hall, and park in box at bottom wall",
         startPosition: { x: 15, y: 8, angle: -Math.PI / 2 }, // Start in entrance, facing down
         walls: [
-            // Entrance (2.5m wide, vertical)
-            { x1: 13.75, y1: 8, x2: 13.75, y2: 12 },  // Left wall of entrance
-            { x1: 16.25, y1: 8, x2: 16.25, y2: 12 },  // Right wall of entrance
-            { x1: 13.75, y1: 12, x2: 16.25, y2: 12 }, // Top of entrance (street side)
+            // Entrance (2.7m wide, vertical)
+            { x1: 13.65, y1: 8, x2: 13.65, y2: 12 },  // Left wall of entrance
+            { x1: 16.35, y1: 8, x2: 16.35, y2: 12 },  // Right wall of entrance
+            { x1: 13.65, y1: 12, x2: 16.35, y2: 12 }, // Top of entrance (street side)
 
             // Wall to the right of entrance (6m long)
-            { x1: 16.25, y1: 2, x2: 16.25, y2: 8 },   // Right wall continuing down
+            { x1: 16.35, y1: 2, x2: 16.35, y2: 8 },   // Right wall continuing down
 
             // Hall extending to the left (15m)
-            { x1: 1, y1: 8, x2: 13.75, y2: 8 },       // Top wall of hall
+            { x1: 1, y1: 8, x2: 13.65, y2: 8 },       // Top wall of hall
             { x1: 1, y1: 2, x2: 1, y2: 8 },           // Left end wall
 
             // Bottom wall of hall (split by parking box gate)
@@ -56,7 +56,7 @@ const SCENARIOS = {
             { x1: 7.66, y1: 2, x2: 8.09, y2: 2 },     // Box wall - left of gate
             // Gate opening from x=8.09 to x=10.23 (2.14m wide)
             { x1: 10.23, y1: 2, x2: 10.66, y2: 2 },   // Box wall - right of gate
-            { x1: 10.66, y1: 2, x2: 16.25, y2: 2 },   // Bottom wall - right of box
+            { x1: 10.66, y1: 2, x2: 16.35, y2: 2 },   // Bottom wall - right of box
 
             // Parking box (extending downward from bottom wall)
             // Box gate 2.14m, total width 3m, length 5.1m
@@ -90,16 +90,16 @@ const SCENARIOS = {
         startPosition: { x: 9.16, y: -0.55, angle: Math.PI / 2 }, // Start inside box, facing up/out
         walls: [
             // Same walls as scenario 2
-            // Entrance (2.5m wide, vertical)
-            { x1: 13.75, y1: 8, x2: 13.75, y2: 12 },
-            { x1: 16.25, y1: 8, x2: 16.25, y2: 12 },
-            { x1: 13.75, y1: 12, x2: 16.25, y2: 12 },
+            // Entrance (2.7m wide, vertical)
+            { x1: 13.65, y1: 8, x2: 13.65, y2: 12 },
+            { x1: 16.35, y1: 8, x2: 16.35, y2: 12 },
+            { x1: 13.65, y1: 12, x2: 16.35, y2: 12 },
 
             // Wall to the right
-            { x1: 16.25, y1: 2, x2: 16.25, y2: 8 },
+            { x1: 16.35, y1: 2, x2: 16.35, y2: 8 },
 
             // Hall
-            { x1: 1, y1: 8, x2: 13.75, y2: 8 },
+            { x1: 1, y1: 8, x2: 13.65, y2: 8 },
             { x1: 1, y1: 2, x2: 1, y2: 8 },
 
             // Bottom wall of hall (split by parking box gate)
@@ -107,7 +107,7 @@ const SCENARIOS = {
             { x1: 7.66, y1: 2, x2: 8.09, y2: 2 },
             // Gate opening from x=8.09 to x=10.23
             { x1: 10.23, y1: 2, x2: 10.66, y2: 2 },
-            { x1: 10.66, y1: 2, x2: 16.25, y2: 2 },
+            { x1: 10.66, y1: 2, x2: 16.35, y2: 2 },
 
             // Parking box (extending downward from bottom wall)
             { x1: 7.66, y1: 2, x2: 7.66, y2: -3.1 },
@@ -170,7 +170,7 @@ const SCENARIOS = {
     5: {
         name: "Perpendicular Parking",
         description: "Park straight into a perpendicular parking space between two cars",
-        startPosition: { x: 15, y: 15, angle: -Math.PI / 2 }, // Start in driving lane, facing space
+        startPosition: { x: 15, y: 14.2, angle: -Math.PI / 2 }, // Start in driving lane, facing space
         walls: [
             // Parking lot driving lane boundaries
             { x1: 5, y1: 12, x2: 25, y2: 12 },  // Top of driving lane
@@ -178,10 +178,9 @@ const SCENARIOS = {
             { x1: 5, y1: 12, x2: 5, y2: 17 },   // Left end
             { x1: 25, y1: 12, x2: 25, y2: 17 }, // Right end
 
-            // Back wall of parking spaces
-            { x1: 5, y1: 7, x2: 11.8, y2: 7 },    // Left section
-            { x1: 13.2, y1: 7, x2: 16.8, y2: 7 }, // Middle section (gap for target space)
-            { x1: 18.2, y1: 7, x2: 25, y2: 7 },   // Right section
+            // Back wall of parking spaces (no wall in target space)
+            { x1: 5, y1: 7, x2: 13.2, y2: 7 },    // Left section (up to target space)
+            { x1: 16.8, y1: 7, x2: 25, y2: 7 },   // Right section (after target space)
 
             // Left parked car (2.4m wide space, x=9.4 to x=11.8)
             { x1: 9.4, y1: 7, x2: 9.4, y2: 11.39 },   // Left side
@@ -193,11 +192,11 @@ const SCENARIOS = {
             { x1: 20.6, y1: 7, x2: 20.6, y2: 11.39 }, // Right side
             { x1: 18.2, y1: 11.39, x2: 20.6, y2: 11.39 }, // Front of car
 
-            // Parking space dividers (painted lines - thin obstacles)
-            { x1: 11.8, y1: 7, x2: 11.8, y2: 12 },    // Left divider
-            { x1: 13.2, y1: 7, x2: 13.2, y2: 12 },    // Left of target space
-            { x1: 16.8, y1: 7, x2: 16.8, y2: 12 },    // Right of target space
-            { x1: 18.2, y1: 7, x2: 18.2, y2: 12 },    // Right divider
+            // Parking space dividers (painted lines - shortened to avoid collision)
+            { x1: 11.8, y1: 7, x2: 11.8, y2: 11.8 },    // Left divider
+            { x1: 13.2, y1: 7, x2: 13.2, y2: 11.8 },    // Left of target space
+            { x1: 16.8, y1: 7, x2: 16.8, y2: 11.8 },    // Right of target space
+            { x1: 18.2, y1: 7, x2: 18.2, y2: 11.8 },    // Right divider
         ],
         target: {
             x: 15,   // Center of 3.6m space (13.2 to 16.8)
