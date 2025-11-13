@@ -154,8 +154,9 @@ class Car {
         this.acceleration = 0;
 
         // Steering
-        this.steeringAngle = 0; // current steering angle
-        this.steeringInput = 0; // -1 to 1
+        this.steeringAngle = 0; // current steering angle (smoothly interpolated)
+        this.targetSteeringAngle = 0; // target angle set by controls (persistent, no auto-center)
+        this.steeringInput = 0; // -1 to 1 (deprecated, kept for compatibility)
 
         // Controls
         this.throttle = 0; // -1 to 1 (negative = reverse)
@@ -287,10 +288,23 @@ class Car {
         };
     }
 
-    // Update steering based on input
+    // Adjust target steering angle (called by controls)
+    adjustSteering(direction, dt) {
+        // direction: -1 for left, +1 for right
+        const adjustRate = 1.5; // radians per second
+        this.targetSteeringAngle += direction * adjustRate * dt;
+
+        // Clamp to max steering angle
+        this.targetSteeringAngle = Math.max(
+            -this.maxSteeringAngle,
+            Math.min(this.maxSteeringAngle, this.targetSteeringAngle)
+        );
+    }
+
+    // Update steering based on target angle
     updateSteering(dt) {
-        const targetAngle = this.steeringInput * this.maxSteeringAngle;
-        const diff = targetAngle - this.steeringAngle;
+        // Smoothly interpolate current angle toward target
+        const diff = this.targetSteeringAngle - this.steeringAngle;
         const change = Math.sign(diff) * Math.min(Math.abs(diff), this.steeringSpeed * dt);
         this.steeringAngle += change;
     }
@@ -363,6 +377,7 @@ class Car {
         this.speed = 0;
         this.acceleration = 0;
         this.steeringAngle = 0;
+        this.targetSteeringAngle = 0;
         this.steeringInput = 0;
         this.throttle = 0;
         this.brake = 0;

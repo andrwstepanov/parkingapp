@@ -129,7 +129,7 @@ class Game {
         );
     }
 
-    updateCarControls() {
+    updateCarControls(dt) {
         // Throttle (forward/reverse)
         if (this.keys['ArrowUp']) {
             this.car.throttle = 1;
@@ -149,14 +149,13 @@ class Game {
             this.car.brake = 0;
         }
 
-        // Steering
+        // Steering - incremental adjustment (no auto-center)
         if (this.keys['ArrowLeft']) {
-            this.car.steeringInput = -1;
+            this.car.adjustSteering(-1, dt);
         } else if (this.keys['ArrowRight']) {
-            this.car.steeringInput = 1;
-        } else {
-            this.car.steeringInput = 0;
+            this.car.adjustSteering(1, dt);
         }
+        // Note: No else clause - steering angle persists when keys released
     }
 
     updateUI() {
@@ -295,7 +294,7 @@ class Game {
         if (this.isPaused || this.isCompleted) return;
 
         // Update car controls from input
-        this.updateCarControls();
+        this.updateCarControls(dt);
 
         // Update car physics
         this.car.update(dt);
