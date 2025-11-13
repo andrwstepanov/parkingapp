@@ -4,11 +4,17 @@ A web-based training application designed to help practice precise parking maneu
 
 ## Features
 
-- **Realistic Physics**: Based on actual Toyota C-HR 2021 HEV specifications
-  - Length: 4.39m
-  - Width: 1.795m
-  - Wheelbase: 2.64m
-  - Turning radius: 5.21m
+- **Realistic Physics**: Based on official Toyota C-HR 2017 technical blueprints
+  - Overall Length: 4.360m (4,360mm)
+  - Overall Width: 1.795m (1,795mm) - body only
+  - Wheelbase: 2.640m (2,640mm)
+  - Front Overhang: 0.912m (912mm)
+  - Rear Overhang: 0.808m (808mm)
+  - Front Track Width: 1.550m (1,550mm)
+  - Rear Track Width: 1.545m (1,545mm)
+  - Kerb-to-kerb turning circle: 10.4m diameter
+  - Rear axle turning radius: 4.425m (for bicycle model)
+  - Max steering angle: 30.97° (matches official ~31° at full lock)
   - Accurate steering mechanics using bicycle model physics
 
 - **Top-Down View**: Bird's eye perspective showing:

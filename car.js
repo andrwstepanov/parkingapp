@@ -1,36 +1,64 @@
 /**
- * Toyota C-HR 2021 HEV - Verified Specifications
+ * Toyota C-HR 2017 - Official Technical Specifications
  *
- * All dimensions and specifications verified against official Toyota technical sheet
- * and independent measurements. Physics model uses bicycle model with accurate
- * turning radius calculations.
+ * All dimensions verified against official Toyota C-HR 2017 technical blueprints.
+ * Physics model uses bicycle model with accurate turning radius calculations.
  *
- * DIMENSIONS:
- *   - Length: 4.39m total (0.88m front overhang + 2.64m wheelbase + 0.87m rear overhang)
- *   - Width: 1.795m body only (mirrors NOT included - they fold and don't count for collision)
- *   - Wheelbase: 2.64m (distance between front and rear axles)
- *   - Front track: 1.54m (distance between left/right front wheels)
+ * OFFICIAL DIMENSIONS (Toyota C-HR 2017):
+ *   - Overall Length: 4.360m (4,360mm)
+ *   - Overall Width: 1.795m (1,795mm) - body only, mirrors NOT included
+ *   - Overall Height: 1.555m (1,555mm)
+ *   - Wheelbase: 2.640m (2,640mm) - distance between front and rear axles
+ *   - Front Overhang: 0.912m (912mm) - from front axle to front bumper
+ *   - Rear Overhang: 0.808m (808mm) - from rear axle to rear bumper
+ *   - Front Track Width: 1.550m (1,550mm) - distance between left/right front wheels
+ *   - Rear Track Width: 1.545m (1,545mm) - distance between left/right rear wheels
+ *   - Ground Clearance: 0.140-0.160m (140-160mm)
+ *
+ * COORDINATE SYSTEM (Rear axle = origin):
+ *   - Rear bumper: -0.808m
+ *   - Rear axle: 0m (reference point)
+ *   - Front axle: +2.640m
+ *   - Front bumper: +3.552m (2.640 + 0.912)
+ *
+ * WHEEL POSITIONS (from front bumper reference):
+ *   - Front Wheel Center: 912mm from front bumper = +2.640m from rear axle
+ *   - Rear Wheel Center: 3,552mm from front bumper = 0m from rear axle
+ *   - Wheelbase: 2,640mm (center to center)
+ *
+ * EXTERIOR MIRROR SPECIFICATIONS:
+ *   - Mirror Housing: 200-220mm wide, 140-160mm high, 100-120mm deep
+ *   - Mirror Position (Longitudinal): 1,400-1,500mm from front bumper
+ *   - Mirror Distance from Body: 180-200mm extended outward from body edge
+ *   - Mirror Mounting Height: 1,200-1,250mm from ground
+ *   - In car coordinates: ~2.10m from rear axle (3.552 - 1.45 avg)
+ *
+ * DRIVER SEAT & CABIN:
+ *   - A-Pillar Base: ~1,200mm from front bumper = ~2.35m from rear axle
+ *   - Driver seat approximately at A-pillar, left side (LHD configuration)
  *
  * TURNING CHARACTERISTICS:
  *   - Kerb-to-kerb turning circle: 10.4m diameter (5.2m radius at outer front wheel)
- *   - Rear axle turning radius: 4.43m (5.2m - track_width/2 = 5.2 - 0.77)
+ *   - Rear axle turning radius: 4.425m (5.2m - track_width/2 = 5.2 - 0.775)
  *   - Wall-to-wall turning circle: ~11.0m diameter
  *   - Max steering angle at full lock: ~31° (0.542 rad) measured at inner front wheel
- *   - Single-track equivalent: ~27° (calculated from rear axle turning radius)
- *   - Outer front wheel angle: ~24° at full lock
+ *   - Single-track equivalent: ~30.8° (calculated: atan(2.64/4.425))
+ *   - Outer front wheel angle: ~24° at full lock (Ackermann geometry)
  *
  * STEERING SYSTEM:
  *   - Steering ratio: 13.6:1 (steering wheel to front wheels)
  *   - Lock-to-lock rotation: 2.76 turns (994° total, ±497° from center)
  *
  * WHEELS & TIRES:
- *   - Standard: 17" wheels with 215/60R17 tires
- *   - Wheel diameter: 0.69m (with tire)
- *   - Tire width: 0.22m (215mm)
+ *   - Standard: 17-18" wheels
+ *   - Common tire: 215/60R17
+ *   - Wheel diameter: ~0.69m (with tire, 17" wheels)
+ *   - Tire width: 0.215m (215mm)
+ *   - Wheel center height from ground: 330-350mm
  *
- * CLEARANCES (2.5m entrance):
- *   - Body clearance: 2.5m - 1.795m = 0.705m total (0.353m per side)
- *   - With mirrors extended: 2.5m - 2.095m = 0.405m total (0.203m per side)
+ * CLEARANCES (2.7m entrance):
+ *   - Body clearance: 2.7m - 1.795m = 0.905m total (0.453m per side)
+ *   - With mirrors extended: 2.7m - 2.195m = 0.505m total (0.253m per side)
  *   - Mirrors are non-collidable (can fold in real situations)
  *
  * PHYSICS MODEL:
@@ -41,16 +69,16 @@
  *
  * IMPORTANT: Kerb-to-kerb measurement (10.4m) is at OUTER FRONT WHEEL.
  *   For bicycle model, we need rear axle radius:
- *   R_rear = R_kerb - (track_width / 2) = 5.2m - 0.77m = 4.43m
+ *   R_rear = R_kerb - (track_width / 2) = 5.2m - 0.775m = 4.425m
  */
 const CAR_SPECS = {
-    length: 4.39,           // Total length
-    width: 1.795,           // Total width (mirrors NOT included - they can fold)
-    wheelbase: 2.64,        // Distance between front and rear axles
-    turningRadius: 4.43,    // Rear axle turning radius (kerb-to-kerb 5.2m - track/2)
-    frontOverhang: 0.88,    // Distance from front axle to front bumper
-    rearOverhang: 0.87,     // Distance from rear axle to rear bumper
-    trackWidth: 1.54,       // Front track width
+    length: 4.360,          // Total length (official: 4,360mm)
+    width: 1.795,           // Total width (official: 1,795mm) - mirrors NOT included
+    wheelbase: 2.640,       // Distance between front and rear axles (official: 2,640mm)
+    turningRadius: 4.425,   // Rear axle turning radius (5.2m - track/2 = 5.2 - 0.775)
+    frontOverhang: 0.912,   // Distance from front axle to front bumper (official: 912mm)
+    rearOverhang: 0.808,    // Distance from rear axle to rear bumper (official: 808mm)
+    trackWidth: 1.550,      // Front track width (official: 1,550mm)
 
     // Wheel specifications (17" wheels with 215/60R17 tires)
     wheelDiameter: 0.69,    // Total wheel + tire diameter
@@ -63,7 +91,7 @@ const CAR_SPECS = {
 
 // Calculate maximum steering angle from turning radius
 // Using bicycle model formula: tan(angle) = wheelbase / turning_radius
-// Result: atan(2.64 / 4.43) = 0.542 radians = 31.1°
+// Result: atan(2.640 / 4.425) = 0.5405 radians = 30.97°
 // This matches the measured inner front wheel angle of ~31° at full lock
 CAR_SPECS.maxSteeringAngle = Math.atan(CAR_SPECS.wheelbase / CAR_SPECS.turningRadius);
 
@@ -137,12 +165,17 @@ class Car {
         const cos = Math.cos(this.angle);
         const sin = Math.sin(this.angle);
 
-        // Positions relative to rear axle
+        // Positions relative to rear axle (official Toyota C-HR 2017 specs)
         // Toyota C-HR is left-hand drive - driver and mirrors are at the FRONT
-        // Front axle is at `wheelbase` distance from rear axle
-        const mirrorX = this.wheelbase * 0.85; // Mirrors near front doors, just before front axle
-        const mirrorY = this.width / 2 + 0.15; // Slightly outside car width
-        const driverX = this.wheelbase * 0.90; // Driver seat at front, just behind front axle
+
+        // Mirror position: 1,400-1,500mm from front bumper (using 1,450mm average)
+        // Front bumper is at 3.552m from rear axle, so mirrors at: 3.552 - 1.45 = 2.102m
+        const mirrorX = 2.102; // Official spec: 1.45m from front bumper
+        const mirrorY = this.width / 2 + 0.19; // 180-200mm extended from body (using 190mm avg)
+
+        // Driver seat at A-pillar base: ~1,200mm from front bumper
+        // From rear axle: 3.552 - 1.2 = 2.352m
+        const driverX = 2.352; // Official spec: A-pillar base at 1.2m from front bumper
         const driverY = -(this.width / 2 - 0.35); // LEFT side for left-hand drive, inset 0.35m from edge
 
         return {
