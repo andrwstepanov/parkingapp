@@ -3,30 +3,30 @@
 const SCENARIOS = {
     1: {
         name: "Street to Underground Entrance",
-        description: "Navigate from a 3.5m wide street through a 90° right turn into a 2.5m wide underground entrance",
+        description: "Navigate from a 3.8m wide street through a 90° right turn into a 2.7m wide underground entrance",
         startPosition: { x: 18, y: 8, angle: Math.PI }, // Start at beginning of street, facing left (right to left)
         walls: [
-            // Street boundaries (horizontal street, 3.5m wide, car drives right to left)
-            { x1: 5, y1: 6.25, x2: 8.75, y2: 6.25 },   // Top wall of street (before entrance)
-            { x1: 11.25, y1: 6.25, x2: 25, y2: 6.25 }, // Top wall of street (after entrance)
-            { x1: 5, y1: 9.75, x2: 8.75, y2: 9.75 },   // Bottom wall of street (before entrance)
-            { x1: 11.25, y1: 9.75, x2: 25, y2: 9.75 }, // Bottom wall of street (after entrance)
+            // Street boundaries (horizontal street, 3.8m wide, car drives right to left)
+            { x1: 5, y1: 6.1, x2: 8.65, y2: 6.1 },   // Top wall of street (before entrance)
+            { x1: 11.35, y1: 6.1, x2: 25, y2: 6.1 }, // Top wall of street (after entrance)
+            { x1: 5, y1: 9.9, x2: 8.65, y2: 9.9 },   // Bottom wall of street (before entrance)
+            { x1: 11.35, y1: 9.9, x2: 25, y2: 9.9 }, // Bottom wall of street (after entrance)
 
-            // Underground entrance (vertical entrance, 2.5m wide, opens into street)
-            { x1: 8.75, y1: 3, x2: 8.75, y2: 6.25 },   // Left wall of entrance
-            { x1: 11.25, y1: 3, x2: 11.25, y2: 6.25 }, // Right wall of entrance
-            { x1: 8.75, y1: 9.75, x2: 8.75, y2: 12 },  // Left wall extension (if needed)
-            { x1: 11.25, y1: 9.75, x2: 11.25, y2: 12 }, // Right wall extension (if needed)
+            // Underground entrance (vertical entrance, 2.7m wide, opens into street)
+            { x1: 8.65, y1: 3, x2: 8.65, y2: 6.1 },   // Left wall of entrance
+            { x1: 11.35, y1: 3, x2: 11.35, y2: 6.1 }, // Right wall of entrance
+            { x1: 8.65, y1: 9.9, x2: 8.65, y2: 12 },  // Left wall extension (if needed)
+            { x1: 11.35, y1: 9.9, x2: 11.35, y2: 12 }, // Right wall extension (if needed)
 
             // End walls
-            { x1: 8.75, y1: 3, x2: 11.25, y2: 3 },  // Entrance end
-            { x1: 25, y1: 6.25, x2: 25, y2: 9.75 },   // Street end (right side)
-            { x1: 5, y1: 6.25, x2: 5, y2: 9.75 },     // Street start (left side)
+            { x1: 8.65, y1: 3, x2: 11.35, y2: 3 },  // Entrance end
+            { x1: 25, y1: 6.1, x2: 25, y2: 9.9 },   // Street end (right side)
+            { x1: 5, y1: 6.1, x2: 5, y2: 9.9 },     // Street start (left side)
         ],
         target: {
             x: 10,
             y: 4.5,
-            width: 2.5,
+            width: 2.7,
             height: 1.5,
             angle: -Math.PI / 2 // Facing down
         },
@@ -170,7 +170,7 @@ const SCENARIOS = {
     5: {
         name: "Perpendicular Parking",
         description: "Park straight into a perpendicular parking space between two cars",
-        startPosition: { x: 15, y: 15, angle: -Math.PI / 2 }, // Start in driving lane, facing space
+        startPosition: { x: 15, y: 15.6, angle: -Math.PI / 2 }, // Start in driving lane, facing space
         walls: [
             // Parking lot driving lane boundaries
             { x1: 5, y1: 12, x2: 25, y2: 12 },  // Top of driving lane
