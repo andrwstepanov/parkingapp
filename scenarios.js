@@ -2,24 +2,24 @@
 
 const SCENARIOS = {
     1: {
-        name: "Street to Underground Entrance",
-        description: "Navigate from a 4.5m wide street through a 90° right turn into a 2.7m wide underground entrance",
+        name: "Street to Underground Ramp",
+        description: "Navigate from a 4.5m wide street through a 90° right turn into a 2.85m wide underground ramp entrance",
         startPosition: { x: 18, y: 8, angle: Math.PI }, // Start at beginning of street, facing left (right to left)
         walls: [
             // Street boundaries (horizontal street, 4.5m wide, car drives right to left)
-            { x1: 5, y1: 5.75, x2: 8.65, y2: 5.75 },   // Top wall of street (before entrance)
-            { x1: 11.35, y1: 5.75, x2: 25, y2: 5.75 }, // Top wall of street (after entrance)
-            { x1: 5, y1: 10.25, x2: 8.65, y2: 10.25 },   // Bottom wall of street (before entrance)
-            { x1: 11.35, y1: 10.25, x2: 25, y2: 10.25 }, // Bottom wall of street (after entrance)
+            { x1: 5, y1: 5.75, x2: 8.575, y2: 5.75 },   // Top wall of street (before ramp)
+            { x1: 11.425, y1: 5.75, x2: 25, y2: 5.75 }, // Top wall of street (after ramp)
+            { x1: 5, y1: 10.25, x2: 8.575, y2: 10.25 },   // Bottom wall of street (before ramp)
+            { x1: 11.425, y1: 10.25, x2: 25, y2: 10.25 }, // Bottom wall of street (after ramp)
 
-            // Underground entrance (vertical entrance, 2.7m wide, opens into street)
-            { x1: 8.65, y1: 3, x2: 8.65, y2: 5.75 },   // Left wall of entrance
-            { x1: 11.35, y1: 3, x2: 11.35, y2: 5.75 }, // Right wall of entrance
-            { x1: 8.65, y1: 10.25, x2: 8.65, y2: 12 },  // Left wall extension (if needed)
-            { x1: 11.35, y1: 10.25, x2: 11.35, y2: 12 }, // Right wall extension (if needed)
+            // Underground ramp entrance (vertical ramp, 2.85m wide, opens into street)
+            { x1: 8.575, y1: 3, x2: 8.575, y2: 5.75 },   // Left wall of ramp
+            { x1: 11.425, y1: 3, x2: 11.425, y2: 5.75 }, // Right wall of ramp
+            { x1: 8.575, y1: 10.25, x2: 8.575, y2: 12 },  // Left wall extension (if needed)
+            { x1: 11.425, y1: 10.25, x2: 11.425, y2: 12 }, // Right wall extension (if needed)
 
             // End walls
-            { x1: 8.65, y1: 3, x2: 11.35, y2: 3 },  // Entrance end
+            { x1: 8.575, y1: 3, x2: 11.425, y2: 3 },  // Ramp end
             { x1: 25, y1: 5.75, x2: 25, y2: 10.25 },   // Street end (right side)
             { x1: 5, y1: 5.75, x2: 5, y2: 10.25 },     // Street start (left side)
         ],
@@ -36,19 +36,19 @@ const SCENARIOS = {
 
     2: {
         name: "Underground Hall to Parking Box",
-        description: "Enter from 2.7m entrance, turn 90° right in the hall, and park in box at bottom wall",
-        startPosition: { x: 15, y: 8, angle: -Math.PI / 2 }, // Start in entrance, facing down
+        description: "Enter from 2.85m ramp, turn 90° right in the hall, and park in box at bottom wall",
+        startPosition: { x: 15, y: 8, angle: -Math.PI / 2 }, // Start in ramp, facing down
         walls: [
-            // Entrance (2.7m wide, vertical)
-            { x1: 13.65, y1: 8, x2: 13.65, y2: 12 },  // Left wall of entrance
-            { x1: 16.35, y1: 8, x2: 16.35, y2: 12 },  // Right wall of entrance
-            { x1: 13.65, y1: 12, x2: 16.35, y2: 12 }, // Top of entrance (street side)
+            // Ramp entrance (2.85m wide, vertical)
+            { x1: 13.575, y1: 8, x2: 13.575, y2: 12 },  // Left wall of ramp
+            { x1: 16.425, y1: 8, x2: 16.425, y2: 12 },  // Right wall of ramp
+            { x1: 13.575, y1: 12, x2: 16.425, y2: 12 }, // Top of ramp (street side)
 
-            // Wall to the right of entrance (6m long)
-            { x1: 16.35, y1: 2, x2: 16.35, y2: 8 },   // Right wall continuing down
+            // Wall to the right of ramp (6m long)
+            { x1: 16.425, y1: 2, x2: 16.425, y2: 8 },   // Right wall continuing down
 
             // Hall extending to the left (15m)
-            { x1: 1, y1: 8, x2: 13.65, y2: 8 },       // Top wall of hall
+            { x1: 1, y1: 8, x2: 13.575, y2: 8 },       // Top wall of hall
             { x1: 1, y1: 2, x2: 1, y2: 8 },           // Left end wall
 
             // Bottom wall of hall (split by parking box gate)
@@ -56,7 +56,7 @@ const SCENARIOS = {
             { x1: 7.66, y1: 2, x2: 8.09, y2: 2 },     // Box wall - left of gate
             // Gate opening from x=8.09 to x=10.23 (2.14m wide)
             { x1: 10.23, y1: 2, x2: 10.66, y2: 2 },   // Box wall - right of gate
-            { x1: 10.66, y1: 2, x2: 16.35, y2: 2 },   // Bottom wall - right of box
+            { x1: 10.66, y1: 2, x2: 16.425, y2: 2 },   // Bottom wall - right of box
 
             // Parking box (extending downward from bottom wall)
             // Box gate 2.14m, total width 3m, length 5.1m
@@ -86,20 +86,20 @@ const SCENARIOS = {
 
     3: {
         name: "Exit Parking Box",
-        description: "Exit from parking box at bottom wall and navigate back to the entrance",
+        description: "Exit from parking box at bottom wall and navigate back to the ramp entrance",
         startPosition: { x: 9.16, y: -0.55, angle: Math.PI / 2 }, // Start inside box, facing up/out
         walls: [
             // Same walls as scenario 2
-            // Entrance (2.7m wide, vertical)
-            { x1: 13.65, y1: 8, x2: 13.65, y2: 12 },
-            { x1: 16.35, y1: 8, x2: 16.35, y2: 12 },
-            { x1: 13.65, y1: 12, x2: 16.35, y2: 12 },
+            // Ramp entrance (2.85m wide, vertical)
+            { x1: 13.575, y1: 8, x2: 13.575, y2: 12 },
+            { x1: 16.425, y1: 8, x2: 16.425, y2: 12 },
+            { x1: 13.575, y1: 12, x2: 16.425, y2: 12 },
 
-            // Wall to the right
-            { x1: 16.35, y1: 2, x2: 16.35, y2: 8 },
+            // Wall to the right of ramp
+            { x1: 16.425, y1: 2, x2: 16.425, y2: 8 },
 
             // Hall
-            { x1: 1, y1: 8, x2: 13.65, y2: 8 },
+            { x1: 1, y1: 8, x2: 13.575, y2: 8 },
             { x1: 1, y1: 2, x2: 1, y2: 8 },
 
             // Bottom wall of hall (split by parking box gate)
@@ -107,7 +107,7 @@ const SCENARIOS = {
             { x1: 7.66, y1: 2, x2: 8.09, y2: 2 },
             // Gate opening from x=8.09 to x=10.23
             { x1: 10.23, y1: 2, x2: 10.66, y2: 2 },
-            { x1: 10.66, y1: 2, x2: 16.35, y2: 2 },
+            { x1: 10.66, y1: 2, x2: 16.425, y2: 2 },
 
             // Parking box (extending downward from bottom wall)
             { x1: 7.66, y1: 2, x2: 7.66, y2: -3.1 },
@@ -210,6 +210,46 @@ const SCENARIOS = {
     },
 
     6: {
+        name: "Long Underground Ramp",
+        description: "Navigate a long 2.85m wide descending ramp with a 90° turn - requires precise control",
+        startPosition: { x: 10, y: 25, angle: -Math.PI / 2 }, // Start at top of ramp, facing down
+        walls: [
+            // Entry area (wider approach)
+            { x1: 7.575, y1: 27, x2: 7.575, y2: 30 },    // Entry left wall
+            { x1: 12.425, y1: 27, x2: 12.425, y2: 30 },  // Entry right wall
+            { x1: 7.575, y1: 30, x2: 12.425, y2: 30 },   // Entry top wall
+
+            // First straight ramp section (2.85m wide, 12m long descent)
+            { x1: 8.575, y1: 15, x2: 8.575, y2: 27 },    // Left wall of ramp
+            { x1: 11.425, y1: 15, x2: 11.425, y2: 27 },  // Right wall of ramp
+
+            // 90° left turn area (widened slightly for turn)
+            { x1: 8.575, y1: 15, x2: 8.575, y2: 18 },    // Continuation left wall
+            { x1: 8.575, y1: 15, x2: 5, y2: 15 },        // Turn outer wall (left)
+            { x1: 8.575, y1: 18, x2: 5, y2: 18 },        // Turn inner wall (left)
+            { x1: 5, y1: 15, x2: 5, y2: 18 },            // Turn end wall
+
+            // Second straight ramp section (2.85m wide, horizontal, 8m long)
+            { x1: 5, y1: 15.425, x2: -3, y2: 15.425 },   // Bottom wall of ramp
+            { x1: 5, y1: 12.575, x2: -3, y2: 12.575 },   // Top wall of ramp
+            { x1: -3, y1: 12.575, x2: -3, y2: 15.425 },  // End wall
+
+            // Barriers to guide path
+            { x1: 7.575, y1: 27, x2: 8.575, y2: 27 },    // Taper start left
+            { x1: 11.425, y1: 27, x2: 12.425, y2: 27 },  // Taper start right
+        ],
+        target: {
+            x: 0,
+            y: 14,
+            width: 2.5,
+            height: 1.5,
+            angle: Math.PI // Facing left (horizontal)
+        },
+        cameraScale: 25,
+        cameraOffset: { x: 5, y: 20 }
+    },
+
+    7: {
         name: "Angle Parking (60°)",
         description: "Park at a 60° angle into an angled parking space - easier than perpendicular",
         startPosition: { x: 20, y: 15, angle: Math.PI }, // Start in driving lane, facing left

@@ -23,13 +23,14 @@ A web-based training application designed to help practice precise parking maneu
   - Driver seat position indicator
   - Real-time steering visualization
 
-- **Six Training Scenarios**:
-  1. **Street to Underground Entrance**: Navigate a 90° right turn from a 4.5m wide street into a 2.7m wide underground entrance
-  2. **Underground Hall to Parking Box**: Enter from 2.7m entrance, turn 90° right in the hall, and park in a tight box (2.14m gate, 3m wide, 5.1m long) at the bottom wall
-  3. **Exit Parking Box**: Exit from the parking box and navigate back to the entrance
+- **Seven Training Scenarios**:
+  1. **Street to Underground Ramp**: Navigate a 90° right turn from a 4.5m wide street into a 2.85m wide underground ramp entrance
+  2. **Underground Hall to Parking Box**: Enter from 2.85m ramp, turn 90° right in the hall, and park in a tight box (2.14m gate, 3m wide, 5.1m long) at the bottom wall
+  3. **Exit Parking Box**: Exit from the parking box and navigate back to the 2.85m ramp entrance
   4. **Parallel Parking**: Classic parallel parking maneuver between two cars with a 6.5m space on a 6m wide street
   5. **Perpendicular Parking**: Park straight into a 90° perpendicular space between two cars in a parking lot
-  6. **Angle Parking (60°)**: Park into an angled parking space at 60° - easier entry than perpendicular parking
+  6. **Long Underground Ramp**: Navigate a long 2.85m wide descending ramp with 12m straight section and a 90° left turn - requires precise steering control
+  7. **Angle Parking (60°)**: Park into an angled parking space at 60° - easier entry than perpendicular parking
 
 - **Interactive Controls**:
   - Arrow keys for steering and acceleration
@@ -95,6 +96,16 @@ All scenarios are based on real-world parking challenges:
 - Accurate dimensions for streets, entrances, and parking spaces
 - Realistic wall placements
 - Target zones with position and angle requirements
+
+#### Underground Ramp Specifications
+
+Scenarios 1, 2, 3, and 6 feature underground parking ramp navigation:
+- **Ramp width**: 2.85m (typical for underground parking structures)
+- **Car width**: 1.795m (Toyota C-HR body width)
+- **Total clearance**: 1.055m (527.5mm per side)
+- **Clearance percentage**: 37% of ramp width available as clearance
+- **Challenge level**: Tight - requires precise steering and spatial awareness
+- Scenarios simulate realistic underground parking garage conditions
 
 ## Development
 
